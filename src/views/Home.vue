@@ -1,21 +1,24 @@
 <template>
   <div class="home">
-    <div v-html="toHTML"></div>
+    <input v-model="API" type="text" placeholder="默认源">
+    <button type="submit" @click="changeS">源更改</button>
     <img src="../assets/logo.png">
+    
+    <input v-model="Input" type="text" placeholder="输入书网址编号">
+    <button type="submit" @click="textInput">确定</button>
+        <br>
+    <br>
     <div v-for="book in books" :key="book.id">
-      <li>      
-        <router-link to="{ name: 'BookIndex', params: {id: book.id}}"> {{ book.url }} </router-link>
-        <span>{{ book.name }}</span>
+      <li style="background-color:#c9e4c6"> 
+        <span v-if="book.source">  来自:{{ book.api }} </span>
+        目录: 
+        <router-link :to="{name: 'BookIndex', params: {id: book.id}}"> {{ book.url }} </router-link>
+        书名:   
+        <span> {{ book.name }}</span>
       </li>
+        <br />
     </div>
-    <select name="pageselect" v-model="selected"  multiple style="width: 50%;">
-      <option value="index_1">第0章 - 第20章</option>
-      <option value="index_2">第20章 - 第40章</option>
-      <option value="index_3">第40章 - 第60章</option>
-      <option value="index_4">第60章 - 第80章</option>
-    </select>
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <span>{{ selected }}</span>
+    <div v-if="!books.length">Loading</div>
   </div>
 </template>
 
@@ -29,27 +32,37 @@ export default {
   name: "home",
   data() {
     return {
-      toHTML: `<div>hahah
-      <a href="#/about.html">about</a>
-      </div>`,
-      selected: [],
-      books: []
+      books: [],
+      Input: "2222",
+      API:""
     };
   },
-
   created(){
     this.$store.dispatch('getAllBooks')
   },
   mounted(){
     this.books = this.$store.state.books
+    this.API = this.$store.state.Api
   },
   methods: {
-    // ...mapActions(['getAllBooks']),
-    onChange(indexPage) {
-      let Op = this.$route.path;
-      let indexFull = mergeUri(Op, indexPage);
-      this.$router.push({ path: indexFull });
-      console.log(indexFull);
+    textInput(){
+      console.log(typeof this.Input)
+      try{
+        let ok = this.Input / 1
+      }catch(err){
+        return 
+      }   
+      this.addJsonStore(this.Input)
+      let uRI = `/book/${this.Input}`
+      this.$router.push({ path:`${uRI}`})
+      console.log(1)
+      
+      },
+    addJsonStore(id){
+      this.$store.dispatch('addJsonStore', id)
+    },
+    changeS(){
+      this.$store.commit("changeSource", this.API)
     }
   },
   watch: {
@@ -62,3 +75,10 @@ export default {
   }
 };
 </script>
+
+<style>
+input {
+  width: 80%
+}
+</style>
+
