@@ -13,9 +13,8 @@
 </template>
 
 <style>
-
-.nr_title{
-  font-size: 1.3em
+.nr_title {
+  font-size: 1.3em;
 }
 
 li {
@@ -26,7 +25,7 @@ a {
   text-decoration: none !important;
 }
 
-table{
+table {
   width: 100% !important;
 }
 
@@ -51,6 +50,37 @@ table{
   color: #42b983;
 }
 
+button {
+color: #666;
+background-color: #eee;
+border-color: #eee;
+font-weight: 300;
+font-size: 16px;
+background-color: #7B72E9;
+border-color: #7B72E9;
+color: #FFF;
+font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial,
+"Lucida Grande", sans-serif;
+text-decoration: none;
+text-align: center;
+line-height: 40px;
+height: 40px;
+padding: 0 40px;
+margin: 0;
+display: inline-block;
+appearance: none;
+cursor: pointer;
+border: none;
+border-top-color: currentcolor;border-right-color: currentcolor;border-bottom-color: currentcolor;border-left-color: currentcolor;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+-webkit-transition-property: all;
+transition-property: all;
+-webkit-transition-duration: 0.3s;
+transition-duration: 0.3s;
+margin: 1em;
+}
 footer {
   position: absolute;
   height: 30%;

@@ -1,5 +1,6 @@
 <template>
-  <div v-if="HTML">
+  <div class="container">
+    <div v-if="HTML">
     <mt-popup
       v-model="popupVisible"
       style="background:#efbcbc;color:black;width:100%"
@@ -21,6 +22,8 @@
     <div class="book">
       <div  ref="getHtml" v-html="HTML"></div>
     </div>
+  </div>
+    <div v-if="HTML == ''"> Loading </div>
   </div>
 </template>
 
