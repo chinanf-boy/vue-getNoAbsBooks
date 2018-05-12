@@ -50,7 +50,7 @@ export default {
     };
   },
   created(){
-    this.$store.dispatch('getAllBooks')
+    this.$store.dispatch('getAllBooks').catch(console.error)
   },
   mounted(){
     this.books = this.$store.state.books
@@ -76,7 +76,7 @@ export default {
       this.$router.push({ path:`${uRI.pathname()}`})
       
       },
-    getFull(input){
+    getFull(Input){
       return this.$store.getters.getFullUrl(Input)
     },
     addJsonStore(url){

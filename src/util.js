@@ -1,7 +1,13 @@
 String.prototype.trimStr = function (str) {
-    return this.replace(new RegExp(`^[${str}]+|[${str}]+$/g`), '');
+    let target = this
+    if(target.startsWith('/')){
+        target = target.slice(1)
+    }
+    if(target.endsWith('/')){
+        target = target.slice(0,-1)
+    }
+    return target
   };
-
 /**
  * @description  merge full uri
  * @param {string} indexP 
