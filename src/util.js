@@ -1,3 +1,7 @@
+String.prototype.trimStr = function (str) {
+    return this.replace(new RegExp(`^[${str}]+|[${str}]+$/g`), '');
+  };
+
 /**
  * @description  merge full uri
  * @param {string} indexP 
