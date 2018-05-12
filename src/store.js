@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    books: null,
+    books: [],
     Api: "http://m.76wx.com",
     suffix: "html",
     directory: "book"
@@ -95,9 +95,10 @@ export default new Vuex.Store({
     getAllBooks({
       commit
     }) {
+      commit('clearBooks')
       
       return axios.get('/api/getAllBooks').then(res => {
-        commit('clearBooks')
+        
         commit("addBooks", res.data.result)
       })
     },

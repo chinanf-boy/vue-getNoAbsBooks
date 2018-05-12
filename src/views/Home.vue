@@ -46,7 +46,7 @@ export default {
   name: "home",
   data() {
     return {
-      books: null,
+      books: [],
       Input: "2222",
       API:"",
       popupVisible:false
