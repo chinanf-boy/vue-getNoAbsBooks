@@ -5,6 +5,11 @@ const axios = require('axios');
 
 
 axios.defaults.timeout = 5000;
-axios.defaults.baseURL = "http://localhost:5000";
+if(process.env.BookDev){
+    axios.defaults.baseURL = "http://localhost:5000";
+}else{
+    axios.defaults.baseURL = "https://getnoabsbooks.herokuapp.com";
+    
+}
 
 export default axios;

@@ -1,14 +1,16 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "./http";
-
+import URI from "urijs"
+require('@/util')
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     books: [],
     Api: "http://m.76wx.com",
-    suffix: "html"
+    suffix: "html",
+    directory: "book"
   },
   mutations: {
     clearBooks(state) {
@@ -22,17 +24,38 @@ export default new Vuex.Store({
       )
     },
     changeApi(state, data){
-      state.Api = data
+    state.Api = data
     },
     changeSuffix(state, data){
       state.suffix = data
     },
   },
+  getters:{
+    getFullUrl(state){
+      return (Input) =>{
+        let U = new URI(state.Api)
+
+        Input = Input.trimStr('/') // trim /
+
+        if(Input.startsWith(state.directory)){
+          // ^[book]
+          U.segmentCoded(Input)
+        }else{
+          //  [^book]
+          U.directory(state.directory)
+          U.segmentCoded(Input)
+        }
+
+        let fullUrl = U.href()
+        return fullUrl
+      }
+    }
+  },
   actions: {
-    addJsonStore(state, id){
-      axios.post('/api/addJsonStore', {id}).then(res =>{
+    addJsonStore(state, url){
+      return axios.post('/api/addJsonStore', {url}).then(res =>{
         console.log('add jsonstore',res.data.ok)
-      }).catch(err => console.error(err))
+      })
     },
     getAllBooks({
       commit

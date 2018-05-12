@@ -1,5 +1,12 @@
 <template>
   <div class="home">
+    <mt-popup
+      v-model="popupVisible"
+      position="top"
+      popup-transition="popup-fade">
+      获取 书 失败
+    </mt-popup>
+
     <input v-model="API" type="text" placeholder="默认源">
     <button type="submit" @click="changeS">源更改</button>
     <img src="../assets/logo.png">
@@ -8,11 +15,12 @@
     <button type="submit" @click="textInput">确定</button>
         <br>
     <br>
+    <!-- b         oo         k      s -->
     <div v-for="book in books" :key="book.id">
       <li style="background-color:#c9e4c6"> 
-        <span v-if="book.source">  来自:{{ book.api }} </span>
+        <span v-if="book.origin">  来自:{{ book.origin }} </span>
         目录: 
-        <router-link :to="{name: 'BookIndex', params: {id: book.id}}"> {{ book.url }} </router-link>
+        <router-link :to="{name: 'BookIndex', params: {id: book.routeLink }}"> {{ book.routeLink }} </router-link>
         书名:   
         <span> {{ book.name }}</span>
       </li>
@@ -27,6 +35,8 @@
 import { mapActions, mapState } from "@/store"
 import HelloWorld from "@/components/HelloWorld.vue";
 import mergeUri from "@/util";
+import URI from "urijs";
+
 
 export default {
   name: "home",
@@ -34,7 +44,8 @@ export default {
     return {
       books: [],
       Input: "2222",
-      API:""
+      API:"",
+      popupVisible:false
     };
   },
   created(){
@@ -46,28 +57,39 @@ export default {
   },
   methods: {
     textInput(){
-      console.log(typeof this.Input)
-      try{
-        let ok = this.Input / 1
-      }catch(err){
-        return 
-      }   
-      this.addJsonStore(this.Input)
-      let uRI = `/book/${this.Input}`
-      this.$router.push({ path:`${uRI}`})
-      console.log(1)
+
+      let fullUrl = this.getFull(this.Input)
+
+      this.addJsonStore(fullUrl).catch(err =>{
+        // error message show
+        this.popupVisible = true
+      })
+
+
+      let uRI = new URI(fullUrl)
+
+      if(uRI.suffix()){
+        this.$store.commit('changeSuffix', uRI.suffix())
+      }
+
+      this.$router.push({ path:`${uRI.pathname()}`})
       
       },
-    addJsonStore(id){
-      this.$store.dispatch('addJsonStore', id)
+    getFull(input){
+      return this.$store.getters.getFullUrl(Input)
+    },
+    addJsonStore(url){
+      return this.$store.dispatch('addJsonStore', url)
     },
     changeS(){
       this.$store.commit("changeApi", this.API)
     }
   },
   watch: {
-    selected: function(newState) {
-      this.onChange(newState);
+    popupVisible:function(N){
+      setTimeout(() =>{
+        this.popupVisible = false
+      },1000)
     }
   },
   components: {

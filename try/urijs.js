@@ -22,3 +22,16 @@ I.map(x =>{
     
     
 })
+
+var U2 = new urijs("http://example.org/#!/foo/bar/baz.html");
+
+var furi = U2.fragment(true);
+l(furi.pathname())
+l(furi.pathname() === "/foo/bar/baz.html");
+
+l(furi.pathname("/hello.html").href());
+
+U2.fragmentPrefix = '?'
+l(furi)
+
+l(urijs.fragmentPrefix = "?");
