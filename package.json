@@ -10,7 +10,12 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
+    "@koa/cors": "^2.2.1",
     "axios": "^0.18.0",
+    "koa": "^2.5.1",
+    "koa-body": "^2.5.0",
+    "koa-logger": "^3.2.0",
+    "koa-static": "^4.0.2",
     "mint-ui": "^2.2.13",
     "urijs": "^1.19.1",
     "vue": "^2.5.16",
