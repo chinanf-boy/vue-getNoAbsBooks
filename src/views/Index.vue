@@ -18,11 +18,11 @@
       :step="1"
       :bar-height="5">
     </mt-range>
-  </div>
-    <div class="book">
-      <div  ref="getHtml" v-html="HTML"></div>
     </div>
   </div>
+      <div class="book">
+      <div ref="getHtml" v-html="HTML"></div>
+    </div>
     <div v-if="HTML == ''"> Loading </div>
   </div>
 </template>
@@ -49,7 +49,7 @@ import { mapState } from '@/store';
       this.$router.afterEach((to, from) => {
         this.popupVisible = false
         this.path = to.path; // 给 watch 启动启动
-    });
+    })
     },
     methods:{
       getBookIndex(){
@@ -73,12 +73,12 @@ import { mapState } from '@/store';
 
         })
       },
-          getFontSize() {
+      getFontSize() {
       this.fontSize = +window
         .getComputedStyle(document.body)
         ["font-size"].replace("px", "");
-    },
-        setFont(val) {
+      },
+      setFont(val) {
       this.$refs.getHtml.style.fontSize = val + "px";
     }
     },
@@ -91,9 +91,12 @@ import { mapState } from '@/store';
       path:function(){
         this.HTML = ``
         this.getBookIndex()
+        console.log('run path')
+        this.setFont(this.fontSize);
+        
       },
-    fontSize: function(n){
-      this.setFont(n)
+      fontSize: function(n){
+        this.setFont(n)
     }
     }
   }
