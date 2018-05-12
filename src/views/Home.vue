@@ -17,14 +17,15 @@
     <br>
     <!-- b         oo         k      s -->
     <div v-for="book in books" :key="book.id">
-      <li style="background-color:#c9e4c6"> 
+      <li style="background-color:#c9e4c6"  v-if="book.routeLink"> 
         <span v-if="book.origin">  来自:{{ book.origin }} </span>
+        <span>
         目录: 
-        <router-link :to="{name: 'BookIndex', params: {id: book.routeLink }}"> {{ book.routeLink }} </router-link>
-        书名:   
-        <span> {{ book.name }}</span>
-      </li>
+        <router-link :to="{ path: book.routeLink }"> {{ book.routeLink }} </router-link>
+        </span>
+        <span v-if="book.name">   书名:   {{ book.name }}</span>
         <br />
+      </li>
     </div>
     <div v-if="!books.length">Loading</div>
   </div>
