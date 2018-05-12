@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
-    "Dev": "cross-env BOOK_DEV=production npm run serve",
     "build": "vue-cli-service build",
     "e2e": "vue-cli-service e2e",
     "lint": "vue-cli-service lint",
