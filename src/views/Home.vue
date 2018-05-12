@@ -30,7 +30,7 @@
       </li>
     </div>
     <div v-if="books == null"> Loading </div>
-    <div v-else>no book , please start your own books trip</div>
+    <div v-else-if="books.length == 0">no book , please start your own books trip</div>
   </div>
 </template>
 
@@ -54,7 +54,7 @@ export default {
   },
   created(){
     this.$store.dispatch('getAllBooks').catch(err =>{
-      this.books = []
+      console.error(err)
     })
   },
   mounted(){
