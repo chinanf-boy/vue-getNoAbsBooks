@@ -62,7 +62,7 @@ export default {
       this.$store.dispatch('addJsonStore', id)
     },
     changeS(){
-      this.$store.commit("changeSource", this.API)
+      this.$store.commit("changeApi", this.API)
     }
   },
   watch: {

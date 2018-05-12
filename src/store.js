@@ -7,7 +7,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     books: [],
-    Api: "http://m.76wx.com"
+    Api: "http://m.76wx.com",
+    suffix: "html"
   },
   mutations: {
     clearBooks(state) {
@@ -15,14 +16,17 @@ export default new Vuex.Store({
     },
     addBooks(state, data) {
       Object.keys(data).forEach(
-        ID => {
-          state.books.push(data[ID])
+        bookName => {
+          state.books.push(data[bookName])
         }
       )
     },
-    changeSource(state, data){
+    changeApi(state, data){
       state.Api = data
-    }
+    },
+    changeSuffix(state, data){
+      state.suffix = data
+    },
   },
   actions: {
     addJsonStore(state, id){
