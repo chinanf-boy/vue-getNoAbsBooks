@@ -29,6 +29,37 @@ table {
   width: 100% !important;
 }
 
+*:focus {
+      outline: none;
+    }
+
+html {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  text-align: left;
+  width: 100%;
+  margin: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, .05);
+  -webkit-touch-callout: none;
+
+  -webkit-user-select: none;
+  /*background: #e9dfc7;*/
+  overflow: hidden;
+  /*position: fixed;*/
+}
+
+ul {
+  padding-left: 0;
+}
+
+li {
+  list-style: none;
+}
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
