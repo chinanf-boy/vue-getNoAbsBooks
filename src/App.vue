@@ -35,12 +35,12 @@
 .ablum_read span{
     background: #65bbec;
     border-radius: 3px;
-    height: 40px;
+    height: auto;
     line-height: 40px;
     text-align: center;
     width: 51%;
     float: left;
-    margin: auto 1rem;
+    margin: auto auto;
 }
 .ablum_read span a {
   color: #fff;

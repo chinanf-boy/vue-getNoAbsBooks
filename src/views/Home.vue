@@ -6,10 +6,15 @@
       popup-transition="popup-fade">
       {{ errMessage }}
     </mt-popup>
-
-    <input v-model="API" type="text" placeholder="默认源">
+    完整网址:
+    <input v-model="fullURL" type="text" placeholder="www">
     <br>
-    <button type="submit" @click="changeS">源更改</button>
+    <br>
+    <select v-model="apiSelected">
+      <option disabled selected >{{ apiSelected }}</option>
+      <option  v-for="site in API" :key="site" >{{ site }}</option>
+    </select>
+    <br>
     <br>
     
     <input ref="In" v-model="Input" type="text" placeholder="输入书网址编号">
@@ -24,7 +29,7 @@
         <span v-if="book.origin">{{ book.origin }} - </span>
 
         <span> 
-        <router-link :to="{ path: book.routeLink }"> {{ decodeURI(book.name) }} </router-link>
+        <router-link :to="{ path: book.routeLink } "> {{ decodeURI(book.name) }} </router-link>
         </span>
         <!-- <span v-if="decodeURI(book.name)">   书名:   }</span> -->
         <br />
@@ -47,13 +52,18 @@ export default {
   name: "home",
   data() {
     return {
-      Input: "2222",
-      API:"",
+      Input: "2222/",
       popupVisible:false,
-      errMessage:""
+      errMessage:"",
+      apiSelected:"",
+      pathName:""
     };
   },
-  created(){
+  created(){ // 2
+    console.log('set apiSelected',this.API)
+    this.apiSelected = this.API[0]
+    this.$store.commit("setApiSelected", this.API[0])
+    
     this.$store.dispatch('getAllBooks').then(() =>{
       
     }).catch(err =>{
@@ -61,16 +71,49 @@ export default {
     })
   },
   computed:{
-    ...mapState({
+    fullURL:{
+      get:function(){
+        console.log('computed fullURL') // 3
+        let U = new URI(this.apiSelected)
+
+        if(this.pathName != ''){
+          U.pathname(this.pathName)
+        }
+        
+        return U.href()
+      },
+      set:function(N){
+          console.log('computed set fullURL',N)
+          let U = new URI(N)
+          this.apiSelected = U.origin()
+
+          if(U.pathname() == '/'){
+            this.pathName = ""
+          }else{
+            this.pathName = U.pathname()          
+          }
+      }
+    },
+
+    ...mapState({ // 1
       books:(state) => state.books,
-      isLoading:state => state.isHomeLoading
+      isLoading:state => state.isHomeLoading,
+      API:state => state.Api
     })
   },
   mounted(){
-    this.API = this.$store.state.Api
+    console.log('m1')
+    this.getApiSelected()
+    console.log('m2')
+    this.changeInput()
+    console.log('m3')
     this.$refs.In.focus()
   },
   methods: {
+    getApiSelected(){
+      console.log('getApiSelected')
+      
+    },
     textInput(){
       
       if(!this.Input){
@@ -78,8 +121,8 @@ export default {
         return 
       }
 
-      let fullUrl = this.getFull(this.Input)
-
+      let fullUrl = this.fullURL
+      this.$store.commit("setFullURL", this.fullURL)
       this.addJsonStore(fullUrl).catch(err =>{
         // error message show
         this.popupVisible = true
@@ -91,7 +134,7 @@ export default {
       if(uRI.suffix()){
         this.$store.commit('changeSuffix', uRI.suffix())
       }
-      
+      console.log('method textInput route to ',uRI.pathname())
       this.$router.push({ path:`${uRI.pathname()}`})
       
       },
@@ -99,7 +142,7 @@ export default {
 
       let fullUrl = this.$store.getters.getFullUrl(Input)
 
-      this.$store.commit("setFullURL", fullUrl)
+      console.log('method getFull',fullUrl)
 
       return fullUrl
     },
@@ -119,6 +162,18 @@ export default {
     setErrMsg(msg){
         this.popupVisible = true
         this.errMessage = msg
+    },
+    changeInput(){
+      console.log('methods changeInput')
+      let fullUrl = this.getFull(this.Input)
+      console.log('methods changeInput getURL')
+      if(!this.Input){
+        fullUrl = this.apiSelected
+      }
+
+      let F = new URI(fullUrl)
+
+      this.pathName = F.pathname()
     }
   },
   watch: {
@@ -126,6 +181,13 @@ export default {
       setTimeout(() =>{
         this.popupVisible = false
       },5000)
+    },
+    apiSelected:function(N){
+      this.$store.commit("setApiSelected", N)
+    },
+    Input:function(N){
+      console.log('watch Input')
+      this.changeInput()
     }
   },
   components: {
@@ -135,7 +197,10 @@ export default {
 </script>
 
 <style>
-
+select {
+  height: 1.5rem;
+  border: 1px grey solid;
+}
 .book-list {
     text-align: left;
     border-bottom: 1px solid #efefef;

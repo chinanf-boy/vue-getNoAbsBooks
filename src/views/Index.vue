@@ -56,8 +56,11 @@ import { mapState } from '@/store';
     },
     methods:{
       getBookIndex(){
-        console.log('run getBookIndex',this.path)
+        console.log('run getBookIndex',this.path,this.$route.params)
+        if(this.$route.params.api){
 
+          this.$store.commit("setApiSelected",this.$route.params.api)
+        }
         this.$store.dispatch('getBookIndex', this.path ).then(res =>{
           console.log('get Book html', res)
           if(res.data.status){

@@ -9,17 +9,24 @@ export default new Vuex.Store({
   state: {
     // Home
     books: [],
-    Api: "http://m.76wx.com",
+    Api: ["http://m.76wx.com","http://m.zwdu.com"],
+    apiSelected:"http://m.76wx.com",
     suffix: "html",
     directory: "book",
+    fullURL: 'http://m.aileleba.com/41965.shtml',
+    
     // Index
-    fullURL: '',
+
     // status
     isHomeLoading:false
   },
   mutations: {
     setFullURL(state, str){
       state.fullURL = str
+    },
+    setApiSelected(state, str){
+      console.log('mutations:setApiSelected')
+      state.apiSelected = str
     },
     setHomeLoading(state, bool){
       state.isHomeLoading = bool
@@ -44,55 +51,50 @@ export default new Vuex.Store({
   getters:{
     getFullUrl(state){
       return (Input) =>{
-        let U = new URI(state.Api)
+        let U = new URI(state.apiSelected)
         let addS = ''
         if(Input.endsWith('/')){
           addS = '/'
         }
         Input = Input.trimStr('/') // trim /
-        Input += addS
+        console.log('getter getFUll Input',Input)
         
-        if(Input.startsWith(state.directory)){
-          // ^[book]
-          U.segment(Input)
-        }else{
-          //  [^book]
-          U.directory(state.directory)
-          U.segment(Input)
+        U.directory(state.directory)
+        U.segment(Input)
+        if(U.segment().length == 2){ // 4
+          // console.log('1', 4)
+            if(addS && !U.href().endsWith('/')){
+              U.segment(addS)
+              addS = ""
+            }else if(!U.suffix()){
+              U.suffix(state.suffix)
+            }
+            return U.href()
         }
-        
         // console.log(U.href())
         // U.href()
         // 1. http://example.org/book/123234/baz.html => book details
         // 2. http://example.org/book/123234/  => book index
-
-        if(U.href().endsWith('/')){ 
-          // 2
-        // console.log('1', 2)
-          
-          return U.href()
-
-        }
-        if(U.suffix()){
-      // console.log('1', 1)
-          // 1
-          return U.href()
-        }
         // 3. http://example.org/book/123234/123234 => book details or book index
         // 4. http://example.org/book/123234 => book index
         // 5. http://example.org/book/123234/21342/2423443 => book details
         
+        console.log('getter getFUll',U.href())
 
-        if(U.segment().length == 2){ // 4
-      // console.log('1', 4)
 
-          return U.href() + '/'
+
+        U.pathname(Input)
+
+
+        if(addS && !U.href().endsWith('/')){
+          U.segment(addS)
+          addS = ""
+        }else if(!U.suffix()){
+          U.suffix(state.suffix)
         }
 
-        let fullUrl = U.suffix(state.suffix).href() // 5 + 3/2
-      // console.log('1', 5)
-
-        return fullUrl
+        return U.href()
+        
       }
     }
   },
@@ -125,14 +127,19 @@ export default new Vuex.Store({
       commit, state, getters
     }, path ) {
 
-      let url = new URI(state.Api)
+      console.log('actions apiSelected',state.apiSelected)
+      
+      let url = new URI(state.apiSelected)
       // just merge
-      url.segment(path)
-
+      url.pathname(path)
+      
+      console.log('actions getBookIndex',url.href())
+      
       commit("setFullURL", url.href())
       // console.log('url', url)
       // need html etc
       url = url.href()
+      
       console.log("get book index/details ",url)
       return axios.post('/api/getNoAbsBooks',{url}).then(res =>{
         return res
