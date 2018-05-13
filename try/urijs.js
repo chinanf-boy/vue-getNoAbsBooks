@@ -9,17 +9,17 @@ const l = console.log.bind(console)
 
 
 
-I.map(x =>{
-    x = x.trimStr('/')
+// I.map(x =>{
+//     x = x.trimStr('/')
 
     
-    l(uri.segmentCoded(x).href())
-    uri.directory("/bar")
-    l(uri.href())
-    uri.directory("")
+//     l(uri.segmentCoded(x).href())
+//     uri.directory("/bar")
+//     l(uri.href())
+//     uri.directory("")
     
     
-})
+// })
 l()
 var U2 = new urijs("http://example.org/#!/foo/bar/baz.html");
 
@@ -52,3 +52,8 @@ l()
 var U6 = new urijs("http://example.org/foo/bar/baz/index_3")
 
 l(U6.suffix('html').href())
+
+l()
+var U7 = new urijs("http://example.org/foo/bar/baz/index_3")
+
+l(U7.origin())

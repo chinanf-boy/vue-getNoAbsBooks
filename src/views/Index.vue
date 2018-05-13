@@ -20,8 +20,8 @@
     </mt-range>
     </div>
   </div>
-      <div class="book">
-      <div ref="getHtml" v-html="HTML"></div>
+    <div class="book">
+      <div class="cover" ref="getHtml" v-html="HTML"></div>
     </div>
     <div v-if="HTML == ''"> Loading </div>
   </div>
@@ -103,5 +103,8 @@ import { mapState } from '@/store';
 </script>
 
 <style scoped>
+.cover{
+  margin: auto 1rem auto 1rem;
+}
 
 </style>

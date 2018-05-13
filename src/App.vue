@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div >
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">About me</router-link>
     </div>
     <router-view/>
   </div>
@@ -13,8 +13,65 @@
 </template>
 
 <style>
+.back_r {
+    padding: 0 1rem;
+    height: 2rem;
+    margin: 1rem 1rem;
+    line-height: 2rem;
+    font-size: 1rem;
+    background-color: #65bbec;
+    border-radius: rem;
+    width: auto;
+}
+.back_r a {
+  color:#fff;
+}
+.block{
+  color:#666;
+}
+ .intro_info {
+  color:#666;    
+ }
+.ablum_read span{
+    background: #65bbec;
+    border-radius: 3px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    width: 51%;
+    float: left;
+    margin: auto 1rem;
+}
+.ablum_read span a {
+  color: #fff;
+
+}
+
+.intro {
+    border-bottom: 1px solid #65bbec;
+    background: #ECF0F0;
+    height: 35px;
+    line-height: 38px;
+    padding-left: 8px;
+    font-weight: 700;
+    font-size: 15px;
+    color: #000;
+    margin: 1rem;
+    
+}
+
+.chapter{
+  text-align: left;
+}
+
 .nr_title {
   font-size: 1.3em;
+}
+
+.middle {
+  width: 50%;
+  margin: 1rem;
+  border: 1px solid #dfdfdf;
 }
 
 li {
@@ -22,6 +79,8 @@ li {
 }
 
 a {
+  color: #000;
+  font-weight: 400;
   text-decoration: none !important;
 }
 
@@ -37,6 +96,7 @@ html {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  font: 16px/1.5 'microsoft yahei';
 }
 
 body {
@@ -45,7 +105,6 @@ body {
   margin: 0;
   -webkit-tap-highlight-color: rgba(0, 0, 0, .05);
   -webkit-touch-callout: none;
-
   -webkit-user-select: none;
   /*background: #e9dfc7;*/
   overflow: hidden;
@@ -65,7 +124,7 @@ li {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #000;
   background-color: #fbf6ec;
 }
 #nav {

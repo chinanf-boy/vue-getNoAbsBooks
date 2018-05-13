@@ -7,12 +7,18 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    // Home
     books: [],
     Api: "http://m.76wx.com",
     suffix: "html",
-    directory: "book"
+    directory: "book",
+    // status
+    isHomeLoading:false
   },
   mutations: {
+    setHomeLoading(state, bool){
+      state.isHomeLoading = bool
+    },
     clearBooks(state) {
       state.books = []
     },
@@ -92,15 +98,23 @@ export default new Vuex.Store({
         console.log('add jsonstore',res.data.ok)
       })
     },
-    getAllBooks({
+    getAllBooks:async function({
       commit
     }) {
+      commit('setHomeLoading', true)
+
       commit('clearBooks')
       
-      return axios.get('/api/getAllBooks').then(res => {
-        
+      let result = await axios.get('/api/getAllBooks').then(res => {
         commit("addBooks", res.data.result)
       })
+
+      commit('setHomeLoading', false)
+      
+      console.log('getAllBooks done')
+
+      return result
+      
     },
     getBookIndex({
       commit, state, getters
