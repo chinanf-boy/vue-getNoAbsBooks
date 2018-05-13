@@ -96,7 +96,12 @@ export default {
       
       },
     getFull(Input){
-      return this.$store.getters.getFullUrl(Input)
+
+      let fullUrl = this.$store.getters.getFullUrl(Input)
+
+      this.$store.commit("setFullURL", fullUrl)
+
+      return fullUrl
     },
     addJsonStore(url){
       return this.$store.dispatch('addJsonStore', url)

@@ -12,10 +12,15 @@ export default new Vuex.Store({
     Api: "http://m.76wx.com",
     suffix: "html",
     directory: "book",
+    // Index
+    fullURL: '',
     // status
     isHomeLoading:false
   },
   mutations: {
+    setFullURL(state, str){
+      state.fullURL = str
+    },
     setHomeLoading(state, bool){
       state.isHomeLoading = bool
     },
@@ -119,11 +124,16 @@ export default new Vuex.Store({
     getBookIndex({
       commit, state, getters
     }, path ) {
-      // console.log('path', path)
 
-      let url = getters.getFullUrl(path)
+      let url = new URI(state.Api)
+      // just merge
+      url.segment(path)
+
+      commit("setFullURL", url.href())
       // console.log('url', url)
       // need html etc
+      url = url.href()
+      console.log("get book index/details ",url)
       return axios.post('/api/getNoAbsBooks',{url}).then(res =>{
         return res
       })

@@ -42,21 +42,24 @@ import { mapState } from '@/store';
       }
     },
     mounted(){
-      this.getBookIndex()
       this.getFontSize();
     },
     created() {
+      console.log('path ==>>> to.path')
+      
+      this.path = this.$route.path
       this.$router.afterEach((to, from) => {
+        console.log('run router',to.path)
         this.popupVisible = false
         this.path = to.path; // 给 watch 启动启动
     })
     },
     methods:{
       getBookIndex(){
-        this.path = this.$route.path
+        console.log('run getBookIndex',this.path)
 
-        this.$store.dispatch('getBookIndex', this.$route.path ).then(res =>{
-
+        this.$store.dispatch('getBookIndex', this.path ).then(res =>{
+          console.log('get Book html', res)
           if(res.data.status){
             let moreDetails = `${JSON.stringify(res.data)}`
 
@@ -89,9 +92,9 @@ import { mapState } from '@/store';
         }, 5000);
       },
       path:function(){
+        console.log('path change')
         this.HTML = ``
         this.getBookIndex()
-        console.log('run path')
         this.setFont(this.fontSize);
         
       },
