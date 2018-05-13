@@ -22,15 +22,20 @@
     <button type="submit" @click="textInput">书籍ID确定</button>
     <br>
     <br>
+    <div class="books_span" v-if="books.length">
+      Books
+    </div>
     <!-- b         oo         k      s -->
     <div class="book-list" v-for="book in books" :key="book.time">
       <li style="background-color:#c9e4c6"  v-if="book.origin"> 
 
         <span v-if="book.origin">{{ book.origin }} - </span>
 
-        <span> 
-        <router-link :to="{ path: book.routeLink } "> {{ decodeURI(book.name) }} </router-link>
-        </span>
+        <router-link :to="{ path: book.routeLink } " tag="span"> 
+          <button class="home_book" type="submit" @click="setA(book.origin)">
+            {{ decodeURI(book.name)}}
+          </button>
+           </router-link>
         <!-- <span v-if="decodeURI(book.name)">   书名:   }</span> -->
         <br />
       </li>
@@ -110,6 +115,10 @@ export default {
     this.$refs.In.focus()
   },
   methods: {
+    setA(N){
+      console.log('book.origin set ApiSelected ',N)
+      this.$store.commit("setApiSelected", N)
+    },
     getApiSelected(){
       console.log('getApiSelected')
       
@@ -201,6 +210,10 @@ select {
   height: 1.5rem;
   border: 1px grey solid;
 }
+.books_span {
+  border: 1px orange solid;
+  background-color: #999;
+}
 .book-list {
     text-align: left;
     border-bottom: 1px solid #efefef;
@@ -209,6 +222,11 @@ select {
     line-height: 40px;
     color: #999;
     overflow: hidden;
+}
+.home_book {
+  margin: 0;
+  background-color: #93875F;
+  font-weight: bold;
 }
 input {
   width: 80%
