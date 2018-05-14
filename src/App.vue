@@ -174,7 +174,7 @@ li {
   background-color: #fbf6ec;
 }
 .loading{
-  width: 99%;
+  width: 100%;
   position: absolute;
 }
 #nav {

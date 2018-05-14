@@ -21,8 +21,12 @@
         </div>
       </div>
     </div>
-  <div v-if="isLoading"  class="loading" >
-    <span> 请求 {{fullurl}}  </span>
+  <div v-if="true"  class="loading" >
+    请求 
+    <br>  
+    {{apiSelected}}
+    <br>
+    {{path}}
         <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
         </mt-spinner>
   </div>
@@ -50,6 +54,8 @@ import localforage from 'localforage'
       ...mapState({
         errMessage:(state) => state.errMessage,
         fullurl:(state) => state.fullURL,
+        apiSelected:(state) => state.apiSelected,
+        
         isLoading:state => state.isIndexLoading,
       })
     },
