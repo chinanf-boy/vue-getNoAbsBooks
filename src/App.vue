@@ -174,8 +174,8 @@ li {
   background-color: #fbf6ec;
 }
 .loading{
+  width: 99%;
   position: absolute;
-  right: 10vw;
 }
 #nav {
   padding: 30px;
