@@ -1,13 +1,6 @@
 <template>
   <div class="container">
     <div v-if="HTML">
-    <mt-popup
-      v-model="popupVisible"
-      style="background:#efbcbc;color:black;width:100%"
-      position="top"
-      popup-transition="popup-fade">
-      {{ errMessage }}
-    </mt-popup>
     <div v-if="fontSize">
     字体大小 {{ fontSize }}
     <br>
@@ -28,27 +21,33 @@
         </div>
       </div>
     </div>
-    <div v-if="HTML==''"  class="loading" >
-      <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
+  <div v-if="HTML=='' && !errMessage"  class="loading" >
+    <span> {{fullurl}} </span>
+  <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
         </mt-spinner>
       </div>
+  <div v-else-if="errMessage">{{errMessage}}</div>
   </div>
 </template>
 
 <script>
-import { mapState } from '@/store'; 
+import { mapState,mapActions,mapMutations } from 'vuex'; 
 import localforage from 'localforage'
 
   export default {
     name: "BookIndex",
     data:function(){
       return {
-        popupVisible:false,
-        errMessage:"",
         HTML: ``,
         path: "",
-        fontSize: null
+        fontSize: null,
       }
+    },
+    computed:{
+      ...mapState({
+        errMessage:(state) => state.errMessage,
+        fullurl:(state) => state.fullURL,
+      })
     },
     mounted(){
       this.getFontSize();
@@ -61,7 +60,7 @@ import localforage from 'localforage'
       this.path = this.$route.path
       this.$router.afterEach((to, from) => {
         console.log('run router',to.path)
-        this.popupVisible = false
+        this.setBlockLoading(false)
         this.path = to.path; // 给 watch 启动启动
         console.log('run router set',this.fontSize, this.setFont)
         
@@ -69,28 +68,27 @@ import localforage from 'localforage'
     })
     },
     methods:{
+      ...mapMutations(['setBlockLoading']),
+      ...mapActions(['showErrMessage']),
       getBookIndex(){
         console.log('run getBookIndex',this.path,this.$route.params)
-        if(this.$route.params.api){
 
-          this.$store.commit("setApiSelected",this.$route.params.api)
-        }
         this.$store.dispatch('getBookIndex', this.path ).then(res =>{
-          console.log('get Book html', res)
-          if(res.data.status){
+          console.log('getBookIndex ✅', res)
+
+          if(res.data.status > 300){
             let moreDetails = `${JSON.stringify(res.data)}`
 
             throw new Error(`资源 ERROR:${res.data.status}`)
 
           }else{
             this.HTML = res.data
-            
+            this.showErrMessage('')
           }
-        }
-        ).catch(err =>{
-          this.errMessage = err.message
-          this.popupVisible = true
-
+          
+        }).catch(err =>{
+          console.log('getBookIndex ❌',err.message)
+          this.showErrMessage(err.message)
         })
       },
       async getFontSize() {
@@ -116,15 +114,10 @@ import localforage from 'localforage'
     }
     },
     watch:{
-      'popupVisible':function(n){
-        setTimeout(() => {
-          this.popupVisible = false
-        }, 5000);
-      },
       path:function(){
         console.log('path change')
-        this.HTML = ``
         this.getBookIndex()
+        this.HTML = ``
       },
       fontSize: function(n){
         this.setFont(n)

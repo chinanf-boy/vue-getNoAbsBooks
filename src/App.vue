@@ -1,6 +1,13 @@
 <template>
   <div >
   <div id="app">
+    <mt-popup
+      v-model="popupVisible"
+      style="background:#efbcbc;color:black;width:100%"
+      position="top"
+      popup-transition="popup-fade">
+      {{ errMessage }}
+    </mt-popup>
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About me</router-link>
@@ -18,6 +25,31 @@
   </div>
 </template>
 
+<script>
+import { mapState } from 'vuex'
+
+  export default {
+    name: "App",
+    data:function(){
+      return {
+        popupVisible:false
+      }
+    },
+    computed:{
+      ...mapState({
+        isBlockLoading:(state) => state.isBlockLoading,
+        errMessage:(state) => state.errMessage,
+      })
+    },
+    watch:{
+      isBlockLoading:function(N){
+        this.popupVisible = N
+      }
+    }
+
+    
+  }
+</script>
 <style>
 .back_r {
     padding: 0 1rem;

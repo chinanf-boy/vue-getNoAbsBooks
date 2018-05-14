@@ -7,13 +7,16 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    // App
+    isBlockLoading:false,
+    errMessage:"",
     // Home
     books: [],
     Api: ["http://m.76wx.com","http://m.zwdu.com"],
     apiSelected:"http://m.76wx.com",
     suffix: "html",
     directory: "book",
-    fullURL: 'http://m.aileleba.com/41965.shtml',
+    fullURL: '',
     
     // Index
 
@@ -21,6 +24,14 @@ export default new Vuex.Store({
     isHomeLoading:false
   },
   mutations: {
+    // App
+    setBlockLoading(state, bool){
+      state.isBlockLoading = bool
+    },
+    setErrMessage(state, err){
+      state.errMessage = err
+    },
+    // Home
     setFullURL(state, str){
       state.fullURL = str
     },
@@ -49,6 +60,8 @@ export default new Vuex.Store({
     },
   },
   getters:{
+
+    // 
     getFullUrl(state){
       return (Input) =>{
         let U = new URI(state.apiSelected)
@@ -99,6 +112,29 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    // App
+    showErrMessage: async function({commit, dispatch}, errMessage){
+      if(errMessage){
+        commit("setBlockLoading", true)
+  
+        commit("setErrMessage", errMessage)
+  
+        await dispatch("waitTime", 3000)
+  
+        commit("setBlockLoading", false)
+      }else{
+        commit("setErrMessage", errMessage)        
+      }
+    },
+    waitTime: async function({commit},time){
+      await new Promise((ok,bad) =>{
+        try{
+          setTimeout(ok, time)
+        }catch(e){
+          bad(e)
+        }
+      })
+    },
     addJsonStore(state, url){
       console.log('adding jsonstore',url)
       return axios.post('/api/addJsonStore', {url}).then(res =>{

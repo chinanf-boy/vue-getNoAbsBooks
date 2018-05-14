@@ -1,11 +1,5 @@
 <template>
   <div class="home">
-    <mt-popup
-      v-model="popupVisible"
-      position="bottom"
-      popup-transition="popup-fade">
-      {{ errMessage }}
-    </mt-popup>
     完整网址:
     <input v-model="fullURL" type="text" placeholder="www">
     <br>
@@ -60,8 +54,6 @@ export default {
   data() {
     return {
       Input: "2222/",
-      popupVisible:false,
-      errMessage:"",
       apiSelected:"",
       pathName:""
     };
@@ -74,7 +66,7 @@ export default {
     this.$store.dispatch('getAllBooks').then(() =>{
       
     }).catch(err =>{
-      this.errMessage = "添加 书籍 失败"
+      this.showErrMessage("添加 书籍 失败")
     })
   },
   computed:{
@@ -117,6 +109,7 @@ export default {
     this.$refs.In.focus()
   },
   methods: {
+      ...mapActions(['showErrMessage']),    
     setA(N){
       console.log('book.origin set ApiSelected ',N)
       this.$store.commit("setApiSelected", N)
@@ -128,7 +121,7 @@ export default {
     textInput(){
       
       if(!this.Input){
-        this.setErrMsg("请输入正确 书籍")
+        this.showErrMessage("请输入正确 书籍")
         return 
       }
 
@@ -136,7 +129,7 @@ export default {
       this.$store.commit("setFullURL", this.fullURL)
       this.addJsonStore(fullUrl).catch(err =>{
         // error message show
-        this.popupVisible = true
+        this.showErrMessage(err)
       })
 
 
@@ -167,12 +160,8 @@ export default {
         this.$store.commit("changeApi", U.origin())
 
       }else{
-        this.setErrMsg('确定 源是 url')
+        this.showErrMessage('确定 源是 url')
       }
-    },
-    setErrMsg(msg){
-        this.popupVisible = true
-        this.errMessage = msg
     },
     changeInput(){
       console.log('methods changeInput')
@@ -188,11 +177,6 @@ export default {
     }
   },
   watch: {
-    popupVisible:function(N){
-      setTimeout(() =>{
-        this.popupVisible = false
-      },5000)
-    },
     apiSelected:function(N){
       this.$store.commit("setApiSelected", N)
     },
