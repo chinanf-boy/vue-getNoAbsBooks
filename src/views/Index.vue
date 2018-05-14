@@ -37,6 +37,7 @@
 
 <script>
 import { mapState } from '@/store'; 
+import localforage from 'localforage'
 
   export default {
     name: "BookIndex",
@@ -92,12 +93,13 @@ import { mapState } from '@/store';
 
         })
       },
-      getFontSize() {
-      this.fontSize = +window
+      async getFontSize() {
+      this.fontSize = await localforage.getItem('user-fontsize')
+      || +window
         .getComputedStyle(document.body)
         ["font-size"].replace("px", "");
       },
-      setFont(val) {
+      async setFont(val) {
         console.log('setFont', val, document.querySelector('body')) // every time refs
         // if(this.$refs.getHtml){
 
@@ -105,6 +107,9 @@ import { mapState } from '@/store';
 
         // }else{
           document.querySelector('body').style.fontSize =  val + "px"
+          await localforage.setItem('user-fontsize',val)
+          console.log('setFont localforage', await localforage.getItem('user-fontsize')) // every time refs
+          
         // }
         // console.log('setFont', val, this.$refs.getHtml)
         
