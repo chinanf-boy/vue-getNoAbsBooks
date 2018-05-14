@@ -13,7 +13,7 @@
     
     <input ref="In" v-model="Input" type="text" placeholder="输入书网址编号">
     <br>
-    <button type="submit" @click="textInput">书籍ID确定👉 </button>
+    <button type="submit" @click="textInput">👉 书籍ID确定</button>
     <br>
     <br>
     <div class="books_span" v-if="books.length">

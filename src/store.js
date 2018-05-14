@@ -19,12 +19,15 @@ export default new Vuex.Store({
     fullURL: '',
     
     // Index
-
+    isIndexLoading:false,
     // status
     isHomeLoading:false
   },
   mutations: {
     // App
+    clearBooks(state) {
+      state.books = []
+    },
     setBlockLoading(state, bool){
       state.isBlockLoading = bool
     },
@@ -42,9 +45,6 @@ export default new Vuex.Store({
     setHomeLoading(state, bool){
       state.isHomeLoading = bool
     },
-    clearBooks(state) {
-      state.books = []
-    },
     addBooks(state, data) {
       Object.keys(data).forEach(
         bookName => {
@@ -57,6 +57,10 @@ export default new Vuex.Store({
     },
     changeSuffix(state, data){
       state.suffix = data
+    },
+    // Index
+    setIndexLoading(state, bool){
+      state.isIndexLoading = bool
     },
   },
   getters:{
@@ -122,8 +126,8 @@ export default new Vuex.Store({
         await dispatch("waitTime", 3000)
   
         commit("setBlockLoading", false)
-      }else{
-        commit("setErrMessage", errMessage)        
+        
+        commit("setErrMessage", "")
       }
     },
     waitTime: async function({commit},time){
@@ -135,6 +139,7 @@ export default new Vuex.Store({
         }
       })
     },
+    // Home
     addJsonStore(state, url){
       console.log('adding jsonstore',url)
       return axios.post('/api/addJsonStore', {url}).then(res =>{
@@ -159,9 +164,12 @@ export default new Vuex.Store({
       return result
       
     },
-    getBookIndex({
-      commit, state, getters
+    // Index
+    getBookIndex:async function({
+      commit, state, getters,dispatch
     }, path ) {
+
+      commit("setIndexLoading",true)
 
       console.log('actions apiSelected',state.apiSelected)
       
@@ -169,17 +177,30 @@ export default new Vuex.Store({
       // just merge
       url.pathname(path)
       
-      console.log('actions getBookIndex',url.href())
+      console.log('getBookIndex',url.href())
       
       commit("setFullURL", url.href())
       // console.log('url', url)
       // need html etc
       url = url.href()
       
-      console.log("get book index/details ",url)
-      return axios.post('/api/getNoAbsBooks',{url}).then(res =>{
-        return res
-      })
+      console.log("getBookIndex before",url)
+      let result
+      try{
+
+        result = await axios.post('/api/getNoAbsBooks',{url})
+
+      }catch(e){
+  
+        dispatch("showErrMessage",e.message)
+        throw new Error(e)
+
+      }finally{
+        console.log("getBookIndex after",result)
+        commit("setIndexLoading",false)
+      }
+
+      return result
     }
   }
 });

@@ -21,12 +21,15 @@
         </div>
       </div>
     </div>
-  <div v-if="HTML=='' && !errMessage"  class="loading" >
-    <span> {{fullurl}} </span>
-  <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
+  <div v-if="isLoading"  class="loading" >
+    <span> 请求 {{fullurl}}  </span>
+        <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
         </mt-spinner>
-      </div>
+  </div>
   <div v-else-if="errMessage">{{errMessage}}</div>
+  <div v-else-if="HTML==''"> 如果你认为这个错误是个bug <br> <a style="color:red;" href="http://github.com/chinanf-boy/vue-getNoAbsBooks">👉 提交bug</a> </div>
+  
+
   </div>
 </template>
 
@@ -47,6 +50,7 @@ import localforage from 'localforage'
       ...mapState({
         errMessage:(state) => state.errMessage,
         fullurl:(state) => state.fullURL,
+        isLoading:state => state.isIndexLoading,
       })
     },
     mounted(){
@@ -83,13 +87,12 @@ import localforage from 'localforage'
 
           }else{
             this.HTML = res.data
-            this.showErrMessage('')
           }
           
         }).catch(err =>{
           console.log('getBookIndex ❌',err.message)
-          this.showErrMessage(err.message)
         })
+
       },
       async getFontSize() {
       this.fontSize = await localforage.getItem('user-fontsize')
