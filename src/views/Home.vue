@@ -25,9 +25,9 @@
       <!-- <span style="background-color:#c9e4c6;width:100%"  v-if="book.origin">  -->
 
         <router-link :to="{ path: book.routeLink } " tag="span" class="book_link" > 
-          <a class="home_book" type="submit" @click="setA(book.origin)">
+          <button class="home_book" type="submit" @click="setA(book.origin)">
             {{decodeURI(book.name)}}  <span class="book_origin" v-if="book.origin"> {{ book.origin}} </span>
-          </a>
+          </button>
            </router-link>
         <!-- <span v-if="decodeURI(book.name)">   书名:   }</span> -->
         <br />
