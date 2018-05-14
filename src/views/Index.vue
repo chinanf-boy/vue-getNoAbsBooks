@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-  <div v-if="true"  class="loading" >
+  <div v-if="isLoading"  class="loading" >
     请求 
     <br>  
     {{apiSelected}}
@@ -31,7 +31,16 @@
         </mt-spinner>
   </div>
   <div v-else-if="errMessage">{{errMessage}}</div>
-  <div v-else-if="HTML==''"> 如果你认为这个错误是个bug <br> <a style="color:red;" href="http://github.com/chinanf-boy/vue-getNoAbsBooks">👉 提交bug</a> </div>
+  <div v-else-if="HTML==''"> 
+    请求 失败
+    <br>  
+    {{apiSelected}}
+    <br>
+    {{path}}
+    如果你认为这个错误是个bug <br> 
+    <a style="color:red;" href="http://github.com/chinanf-boy/vue-getNoAbsBooks">
+    👉 提交bug</a> 
+    </div>
   
 
   </div>
