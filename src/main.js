@@ -1,10 +1,17 @@
 import Vue from "vue";
+
+import localforage from 'localforage'
+
+
 import store from "./store";
 import axios from './http'
 import App from "./App.vue";
 import router from "./router";
 import { Range,Popup,Spinner } from 'mint-ui';
 import 'mint-ui/lib/style.css'
+
+localforage.config({ name: 'getNoAbsBooks' })
+
 
 Vue.component(Range.name, Range);
 Vue.component(Popup.name, Popup);
