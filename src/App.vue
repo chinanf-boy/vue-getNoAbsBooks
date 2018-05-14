@@ -16,7 +16,7 @@
 .back_r {
     padding: 0 1rem;
     height: 2rem;
-    margin: 1rem 1rem;
+    margin: 1rem 30%;
     line-height: 2rem;
     font-size: 1rem;
     background-color: #65bbec;
