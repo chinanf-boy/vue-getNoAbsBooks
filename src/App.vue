@@ -8,6 +8,12 @@
     <router-view/>
   </div>
   <footer>
+<a href="https://github.com/chinanf-boy">
+    <p  class="bottom" >
+      <span style="color:orange;">  @chinanf-boy </span>  2018.5.14
+    </p>
+
+    </a> 
   </footer>
   </div>
 </template>
@@ -64,6 +70,15 @@
   text-align: left;
 }
 
+.chapter li{
+  border-bottom: 1px solid #efefef;
+  text-indent: 10px;
+  height: 40px;
+  line-height: 40px;
+  color: #999;
+  overflow: hidden;
+}
+
 .nr_title {
   font-size: 1.3em;
 }
@@ -106,7 +121,7 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, .05);
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  /*background: #e9dfc7;*/
+  background-color: #fbf6ec;
   overflow: hidden;
   /*position: fixed;*/
 }
@@ -141,11 +156,7 @@ li {
 }
 
 button {
-color: #666;
-background-color: #eee;
-border-color: #eee;
-font-weight: 300;
-font-size: 16px;
+font-size: 1rem;
 background-color: #7B72E9;
 border-color: #7B72E9;
 color: #FFF;
@@ -153,27 +164,29 @@ font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial,
 "Lucida Grande", sans-serif;
 text-decoration: none;
 text-align: center;
-line-height: 40px;
-height: 40px;
-padding: 0 40px;
-margin: 0;
+line-height: 3rem;
+height: 3rem;
+padding: 0 2rem;
 display: inline-block;
 appearance: none;
 cursor: pointer;
 border: none;
-border-top-color: currentcolor;border-right-color: currentcolor;border-bottom-color: currentcolor;border-left-color: currentcolor;
--webkit-box-sizing: border-box;
--moz-box-sizing: border-box;
+border-top-color: currentcolor;
 box-sizing: border-box;
--webkit-transition-property: all;
 transition-property: all;
--webkit-transition-duration: 0.3s;
 transition-duration: 0.3s;
 margin: 1em;
+font-weight: normal;
 }
 footer {
   position: absolute;
   height: 30%;
   width: 100%;
+}
+.bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
 }
 </style>

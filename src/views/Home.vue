@@ -19,27 +19,26 @@
     
     <input ref="In" v-model="Input" type="text" placeholder="输入书网址编号">
     <br>
-    <button type="submit" @click="textInput">书籍ID确定</button>
+    <button type="submit" @click="textInput">书籍ID确定👉 </button>
     <br>
     <br>
     <div class="books_span" v-if="books.length">
       Books
     </div>
     <!-- b         oo         k      s -->
-    <div class="book-list" v-for="book in books" :key="book.time">
-      <li style="background-color:#c9e4c6"  v-if="book.origin"> 
+    <ul>
+    <li  class="book-list" v-for="book in books" :key="book.time">
+      <!-- <span style="background-color:#c9e4c6;width:100%"  v-if="book.origin">  -->
 
-        <span v-if="book.origin">{{ book.origin }} - </span>
-
-        <router-link :to="{ path: book.routeLink } " tag="span"> 
+        <router-link :to="{ path: book.routeLink } " tag="span" class="book_link" > 
           <button class="home_book" type="submit" @click="setA(book.origin)">
-            {{ decodeURI(book.name)}}
+            {{decodeURI(book.name)}}  <span class="book_origin" v-if="book.origin"> {{ book.origin}} </span>
           </button>
            </router-link>
         <!-- <span v-if="decodeURI(book.name)">   书名:   }</span> -->
         <br />
-      </li>
-    </div>
+    </li>
+    </ul>
     <div v-if="isLoading"> Loading </div>
     <div v-else-if="books.length == 0">no book , please start your own books trip</div>
   </div>
@@ -215,18 +214,28 @@ select {
   background-color: #999;
 }
 .book-list {
-    text-align: left;
+    /* text-align: left; */
     border-bottom: 1px solid #efefef;
-    text-indent: 10px;
-    height: 40px;
-    line-height: 40px;
+    text-indent: 0.6rem;
+    height: 3rem;
+    line-height: 3rem;
     color: #999;
-    overflow: hidden;
+    margin-right: 1rem;
+}
+.book_origin {
+  width: 49%;
+  overflow: hidden;
+}
+.book_link {
+  width: 49%;
+  overflow: hidden;
 }
 .home_book {
   margin: 0;
   background-color: #93875F;
   font-weight: bold;
+  border:1px orange solid;
+  padding: 0 1rem;
 }
 input {
   width: 80%
