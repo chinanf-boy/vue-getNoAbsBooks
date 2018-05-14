@@ -21,7 +21,12 @@
     </div>
   </div>
     <div class="book">
-      <div class="cover" ref="getHtml" v-html="HTML"></div>
+      <div class="cover_BOOK" ref="getHtml" >
+
+        <div v-html="HTML">
+
+        </div>
+      </div>
     </div>
     <div v-if="HTML==''"  class="loading" >
       <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
@@ -46,6 +51,8 @@ import { mapState } from '@/store';
     },
     mounted(){
       this.getFontSize();
+      console.log('mounted again')
+
     },
     created() {
       console.log('path ==>>> to.path')
@@ -55,6 +62,9 @@ import { mapState } from '@/store';
         console.log('run router',to.path)
         this.popupVisible = false
         this.path = to.path; // 给 watch 启动启动
+        console.log('run router set',this.fontSize, this.setFont)
+        
+        this.setFont(this.fontSize)
     })
     },
     methods:{
@@ -88,7 +98,16 @@ import { mapState } from '@/store';
         ["font-size"].replace("px", "");
       },
       setFont(val) {
-      this.$refs.getHtml.style.fontSize = val + "px";
+        console.log('setFont', val, document.querySelector('body')) // every time refs
+        // if(this.$refs.getHtml){
+
+        //   this.$refs.getHtml.style.fontSize = val + "px";
+
+        // }else{
+          document.querySelector('body').style.fontSize =  val + "px"
+        // }
+        // console.log('setFont', val, this.$refs.getHtml)
+        
     }
     },
     watch:{
@@ -101,8 +120,6 @@ import { mapState } from '@/store';
         console.log('path change')
         this.HTML = ``
         this.getBookIndex()
-        this.setFont(this.fontSize);
-        
       },
       fontSize: function(n){
         this.setFont(n)
@@ -112,7 +129,7 @@ import { mapState } from '@/store';
 </script>
 
 <style scoped>
-.cover{
+.cover_BOOK{
   margin: auto 1rem auto 1rem;
 }
 

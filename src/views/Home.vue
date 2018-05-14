@@ -31,9 +31,9 @@
       <!-- <span style="background-color:#c9e4c6;width:100%"  v-if="book.origin">  -->
 
         <router-link :to="{ path: book.routeLink } " tag="span" class="book_link" > 
-          <button class="home_book" type="submit" @click="setA(book.origin)">
+          <a class="home_book" type="submit" @click="setA(book.origin)">
             {{decodeURI(book.name)}}  <span class="book_origin" v-if="book.origin"> {{ book.origin}} </span>
-          </button>
+          </a>
            </router-link>
         <!-- <span v-if="decodeURI(book.name)">   书名:   }</span> -->
         <br />
@@ -236,9 +236,22 @@ select {
 .home_book {
   margin: 0;
   background-color: #93875F;
-  font-weight: bold;
   border:1px orange solid;
   padding: 0 1rem;
+  font-size: 1rem;
+  color: #FFF;
+  text-decoration: none;
+  text-align: center;
+  line-height: 3rem;
+  height: 3rem;
+  display: inline-block;
+  appearance: none;
+  cursor: pointer;
+  border-top-color: currentcolor;
+  box-sizing: border-box;
+  transition-property: all;
+  transition-duration: 0.3s;
+  font-weight: normal;
 }
 input {
   width: 80%
