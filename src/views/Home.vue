@@ -25,10 +25,13 @@
       <!-- <span style="background-color:#c9e4c6;width:100%"  v-if="book.origin">  -->
 
         <router-link :to="{ path: book.routeLink } " tag="span" class="book_link" > 
-          <button class="home_book" type="submit" @click="setA(book.origin)">
-            {{decodeURI(book.name)}}  <span class="book_origin" v-if="book.origin"> {{ book.origin}} </span>
+          <button  class="home_book" type="submit" @click="setA(book.origin)">
+            <a class="book_click"> 
+            {{decodeURI(book.name)}}  
+              {{ book.origin}} 
+            </a>
           </button>
-           </router-link>
+        </router-link>
         <!-- <span v-if="decodeURI(book.name)">   书名:   }</span> -->
         <br />
     </li>
@@ -217,6 +220,10 @@ select {
   width: 49%;
   overflow: hidden;
 }
+.book_click {
+  color: #FFF;
+  font-weight: normal;
+}
 .home_book {
   margin: 0;
   background-color: #93875F;
@@ -235,7 +242,6 @@ select {
   box-sizing: border-box;
   transition-property: all;
   transition-duration: 0.3s;
-  font-weight: normal;
 }
 input {
   width: 80%

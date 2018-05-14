@@ -151,6 +151,7 @@ body {
   width: 100%;
   margin: 0;
   -webkit-tap-highlight-color: rgba(0, 0, 0, .05);
+  -webkit-touch-callout: initial;
   -webkit-user-select: none;
   background-color: #fbf6ec;
   overflow: hidden;
