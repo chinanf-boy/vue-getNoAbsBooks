@@ -39,7 +39,10 @@
         <br />
     </li>
     </ul>
-    <div v-if="isLoading"> Loading </div>
+    <div v-if="isLoading" class="loading" >
+      <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
+        </mt-spinner>
+        </div>
     <div v-else-if="books.length == 0">no book , please start your own books trip</div>
   </div>
 </template>

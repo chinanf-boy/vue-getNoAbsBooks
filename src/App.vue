@@ -142,6 +142,10 @@ li {
   color: #000;
   background-color: #fbf6ec;
 }
+.loading{
+  position: absolute;
+  right: 10vw;
+}
 #nav {
   padding: 30px;
 }

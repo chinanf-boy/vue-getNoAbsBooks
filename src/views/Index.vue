@@ -23,7 +23,10 @@
     <div class="book">
       <div class="cover" ref="getHtml" v-html="HTML"></div>
     </div>
-    <div v-if="HTML == ''"> Loading </div>
+    <div v-if="HTML==''"  class="loading" >
+      <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
+        </mt-spinner>
+      </div>
   </div>
 </template>
 

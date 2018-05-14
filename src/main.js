@@ -3,11 +3,12 @@ import store from "./store";
 import axios from './http'
 import App from "./App.vue";
 import router from "./router";
-import { Range,Popup } from 'mint-ui';
+import { Range,Popup,Spinner } from 'mint-ui';
 import 'mint-ui/lib/style.css'
 
 Vue.component(Range.name, Range);
 Vue.component(Popup.name, Popup);
+Vue.component(Spinner.name, Spinner);
 
 Vue.config.productionTip = false;
 
