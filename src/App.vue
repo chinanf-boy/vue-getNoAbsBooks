@@ -206,6 +206,16 @@ li {
   color: #42b983;
 }
 
+.nr_page a {
+    border-radius: .533333vw;
+    background-color: #56d176;
+    color: #fff;
+    padding: 0 2.666667vw 0 2.666667vw;
+    min-width: 32vw;
+    text-align: center;
+    font-size: 1.5rem;
+    font-family: inherit;
+}
 button {
 font-size: 1rem;
 background-color: #7B72E9;
