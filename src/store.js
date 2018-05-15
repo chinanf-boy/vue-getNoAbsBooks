@@ -22,6 +22,7 @@ export default new Vuex.Store({
     fullURL: '',
     
     // Index
+    HTML:"",
     isIndexLoading:false,
     // status
     isHomeLoading:false
@@ -62,6 +63,9 @@ export default new Vuex.Store({
       state.suffix = data
     },
     // Index
+    setHtml(state, h){
+      state.HTML = h
+    },
     setIndexLoading(state, bool){
       state.isIndexLoading = bool
     },
@@ -120,8 +124,8 @@ export default new Vuex.Store({
   },
   actions: {
     // App
-    initBooks: async function({commit,dispatch}){
-      console.log("action initBooks on")
+    initApiSelected: async function({commit,dispatch}){
+      console.log("action initApiSelected on")
       
       let api = await localforage.getItem("user-apiselected")
 
@@ -129,7 +133,7 @@ export default new Vuex.Store({
         commit("setApiSelected", api)
       }
       
-      console.log("action initBooks off")
+      console.log("action initApiSelected off")
       
     },
     syncApi: async function({commit}, a){
@@ -199,16 +203,30 @@ export default new Vuex.Store({
       
     },
     // Index
+    keepHTML:async function({commit,state},html){
+      console.log("action keepHTML on",state.fullURL)
+      await localforage.setItem(`${state.fullURL}`,html)
+      commit("setHtml",html)
+      console.log("action keepHTML off")
+    },
+    copyHTML:async function({commit,state}){
+      console.log("action copyHTML on",state.fullURL)
+      let H = await localforage.getItem(`${state.fullURL}`)
+      commit("setHtml",H)
+      console.log("action copyHTML off")
+      return H
+    },
     getBookIndex:async function({
       commit, state, getters, dispatch
     }, path ) {
+
 
       console.log('actions getBookIndex on',state.apiSelected)
 
       commit("setIndexLoading",true)
 
       if(!state.apiSelected){
-        await dispatch("initBooks")
+        await dispatch("initApiSelected")
       }
       
       let url = new URI(state.apiSelected)
@@ -217,16 +235,24 @@ export default new Vuex.Store({
       
       console.log('getBookIndex',url.href())
       
-      commit("setFullURL", url.href())
+      commit("setFullURL", url.href()) // change fullURL
+      
+
       // console.log('url', url)
       // need html etc
       url = url.href()
       
-      console.log("getBookIndex before",url)
       let result
+      console.log("getBookIndex before",url)
+
       try{
 
-        result = await axios.post('/api/getNoAbsBooks',{url})
+        if(await localforage.getItem(`${url}`)){
+          result = await dispatch("copyHTML")
+        }else{
+          commit("setHtml",'')
+          result = await axios.post('/api/getNoAbsBooks',{url})
+        }
 
       }catch(e){
   
@@ -234,10 +260,15 @@ export default new Vuex.Store({
         throw new Error(e)
 
       }finally{
-        console.log("getBookIndex after",result)
+        console.log("getBookIndex after",result.length)
         commit("setIndexLoading",false)
         console.log('actions getBookIndex off')
       }
+
+      if(result.data){
+        await dispatch("keepHTML",result.data)
+      }
+
 
       
       return result

@@ -45,10 +45,8 @@ import { mapState,mapActions } from 'vuex'
       console.log("app mounted off")
     },
     methods:{
-      ...mapActions(['initBooks']),
       Init(){
         console.log("app method Init on")
-        this.initBooks()
         console.log("app method Init off")
       }
     },
