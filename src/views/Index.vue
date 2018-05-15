@@ -69,14 +69,13 @@ import localforage from 'localforage'
       })
     },
     mounted(){
+      console.log('Index mounted on')
       this.getFontSize();
-      console.log('mounted again')
-
+      this.getPath()
+      console.log('Index mounted off')
     },
     created() {
-      console.log('path ==>>> to.path')
       
-      this.path = this.$route.path
       this.$router.afterEach((to, from) => {
         console.log('run router',to.path)
         this.setBlockLoading(false)
@@ -89,10 +88,17 @@ import localforage from 'localforage'
     methods:{
       ...mapMutations(['setBlockLoading']),
       ...mapActions(['showErrMessage']),
+      getPath(){
+        console.log('Index methods getPath on')
+        this.path = this.$route.path  
+        console.log('Index methods getPath off')
+        
+      },
       getBookIndex(){
-        console.log('run getBookIndex',this.path,this.$route.params)
+        console.log('Index methods getBookIndex on',this.apiSelected,this.path)
 
         this.$store.dispatch('getBookIndex', this.path ).then(res =>{
+                    
           console.log('getBookIndex ✅', res)
 
           if(res.data.status > 300){
@@ -107,7 +113,7 @@ import localforage from 'localforage'
         }).catch(err =>{
           console.log('getBookIndex ❌',err.message)
         })
-
+        console.log('Index methods getBookIndex off',this.apiSelected,this.path)
       },
       async getFontSize() {
       this.fontSize = await localforage.getItem('user-fontsize')
@@ -133,9 +139,10 @@ import localforage from 'localforage'
     },
     watch:{
       path:function(){
-        console.log('path change')
-        this.getBookIndex()
+        console.log('Index watch path on')
         this.HTML = ``
+        this.getBookIndex()
+        console.log('Index watch path off')
       },
       fontSize: function(n){
         this.setFont(n)

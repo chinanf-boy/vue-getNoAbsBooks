@@ -26,13 +26,30 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState,mapActions } from 'vuex'
 
   export default {
     name: "App",
     data:function(){
       return {
         popupVisible:false
+      }
+    },
+    created:function(){
+      console.log("app created on")
+      // this.Init()
+      console.log("app created off")
+    },
+    mounted:function(){
+      console.log("app mounted on")
+      console.log("app mounted off")
+    },
+    methods:{
+      ...mapActions(['initBooks']),
+      Init(){
+        console.log("app method Init on")
+        this.initBooks()
+        console.log("app method Init off")
       }
     },
     computed:{

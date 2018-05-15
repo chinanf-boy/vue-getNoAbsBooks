@@ -5,6 +5,9 @@ import URI from "urijs"
 require('@/util')
 Vue.use(Vuex);
 
+import localforage from 'localforage'
+
+
 export default new Vuex.Store({
   state: {
     // App
@@ -13,7 +16,7 @@ export default new Vuex.Store({
     // Home
     books: [],
     Api: ["http://m.76wx.com","http://m.zwdu.com"],
-    apiSelected:"http://m.76wx.com",
+    apiSelected:"",
     suffix: "html",
     directory: "book",
     fullURL: '',
@@ -39,7 +42,7 @@ export default new Vuex.Store({
       state.fullURL = str
     },
     setApiSelected(state, str){
-      console.log('mutations:setApiSelected')
+      console.log('mutations:setApiSelected',str)
       state.apiSelected = str
     },
     setHomeLoading(state, bool){
@@ -117,6 +120,24 @@ export default new Vuex.Store({
   },
   actions: {
     // App
+    initBooks: async function({commit,dispatch}){
+      console.log("action initBooks on")
+      
+      let api = await localforage.getItem("user-apiselected")
+
+      if(api){
+        commit("setApiSelected", api)
+      }
+      
+      console.log("action initBooks off")
+      
+    },
+    syncApi: async function({commit}, a){
+      console.log("action syncApi on",a)
+      commit("setApiSelected",a)
+      localforage.setItem("user-apiselected",a)
+      console.log("action syncApi off",a)
+    },
     showErrMessage: async function({commit, dispatch}, errMessage){
       if(errMessage){
         commit("setBlockLoading", true)
@@ -149,29 +170,46 @@ export default new Vuex.Store({
     getAllBooks:async function({
       commit
     }) {
+      console.log('actions getAllBooks on')
+      
       commit('setHomeLoading', true)
 
       commit('clearBooks')
-      
-      let result = await axios.get('/api/getAllBooks').then(res => {
-        commit("addBooks", res.data.result)
-      })
 
-      commit('setHomeLoading', false)
+      let result
+      try{
+
+         result = await axios.get('/api/getAllBooks').then(res => {
+          commit("addBooks", res.data.result)
+          })
+
+      }catch(e){
+
+        dispatch("showErrMessage",e.message)
+        throw new Error(e)
+
+      }finally{
+        commit('setHomeLoading', false)
+
+        console.log('actions getAllBooks off')
+      }
       
-      console.log('getAllBooks done')
 
       return result
       
     },
     // Index
     getBookIndex:async function({
-      commit, state, getters,dispatch
+      commit, state, getters, dispatch
     }, path ) {
+
+      console.log('actions getBookIndex on',state.apiSelected)
 
       commit("setIndexLoading",true)
 
-      console.log('actions apiSelected',state.apiSelected)
+      if(!state.apiSelected){
+        await dispatch("initBooks")
+      }
       
       let url = new URI(state.apiSelected)
       // just merge
@@ -198,8 +236,10 @@ export default new Vuex.Store({
       }finally{
         console.log("getBookIndex after",result)
         commit("setIndexLoading",false)
+        console.log('actions getBookIndex off')
       }
 
+      
       return result
     }
   }

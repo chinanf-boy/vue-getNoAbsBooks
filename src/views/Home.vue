@@ -62,30 +62,28 @@ export default {
     };
   },
   created(){ // 2
-    console.log('set apiSelected',this.API)
+    console.log("home created on")
+
     this.apiSelected = this.API[0]
-    this.$store.commit("setApiSelected", this.API[0])
-    
-    this.$store.dispatch('getAllBooks').then(() =>{
-      
-    }).catch(err =>{
-      this.showErrMessage("添加 书籍 失败")
-    })
+
+    this.syncApi(this.API[0])
+
+    console.log("home created off")
   },
   computed:{
     fullURL:{
       get:function(){
-        console.log('computed fullURL') // 3
         let U = new URI(this.apiSelected)
 
         if(this.pathName != ''){
           U.pathname(this.pathName)
         }
         
+        console.log('computed fullURL get',U.href()) // 3
         return U.href()
       },
       set:function(N){
-          console.log('computed set fullURL',N)
+          console.log('computed fullURL set',N)
           let U = new URI(N)
           this.apiSelected = U.origin()
 
@@ -104,21 +102,29 @@ export default {
     })
   },
   mounted(){
-    console.log('m1')
-    this.getApiSelected()
-    console.log('m2')
+    console.log("Home mounted on")
+
+    this.getBooks()
+
     this.changeInput()
-    console.log('m3')
+
     this.$refs.In.focus()
+
+    console.log("Home mounted off")
+    
   },
   methods: {
-      ...mapActions(['showErrMessage']),    
+      ...mapActions(['showErrMessage','syncApi','getAllBooks']), 
     setA(N){
       console.log('book.origin set ApiSelected ',N)
-      this.$store.commit("setApiSelected", N)
+     this.syncApi(N)
     },
-    getApiSelected(){
-      console.log('getApiSelected')
+    getBooks(){
+      console.log('Home methods getBooks on')
+      this.getAllBooks().catch(err =>{
+          console.log('getAllBooks ❌',err.message)
+        })
+      console.log('Home methods getBooks off')
       
     },
     textInput(){
