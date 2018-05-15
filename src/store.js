@@ -24,6 +24,7 @@ export default new Vuex.Store({
     // Index
     HTML:"",
     isIndexLoading:false,
+    messageForUser:"",
     // status
     isHomeLoading:false
   },
@@ -36,7 +37,10 @@ export default new Vuex.Store({
       state.isBlockLoading = bool
     },
     setErrMessage(state, err){
+      console.log("mutations setErrMessage on")
       state.errMessage = err
+      console.log("mutations setErrMessage off")
+      
     },
     // Home
     setFullURL(state, str){
@@ -69,6 +73,9 @@ export default new Vuex.Store({
     setIndexLoading(state, bool){
       state.isIndexLoading = bool
     },
+    setMessageForUser(state, h){
+      state.messageForUser = h
+    }
   },
   getters:{
 
@@ -147,9 +154,11 @@ export default new Vuex.Store({
         commit("setBlockLoading", true)
   
         commit("setErrMessage", errMessage)
-  
-        await dispatch("waitTime", 3000)
-  
+
+        commit("setMessageForUser", errMessage)
+
+        await dispatch("waitTime", 1000)
+        
         commit("setBlockLoading", false)
         
         commit("setErrMessage", "")
@@ -172,7 +181,7 @@ export default new Vuex.Store({
       })
     },
     getAllBooks:async function({
-      commit
+      commit,dispatch
     }) {
       console.log('actions getAllBooks on')
       
@@ -186,16 +195,17 @@ export default new Vuex.Store({
          result = await axios.get('/api/getAllBooks').then(res => {
           commit("addBooks", res.data.result)
           })
-
+          
       }catch(e){
 
-        dispatch("showErrMessage",e.message)
+        await dispatch("showErrMessage",e.message)
         throw new Error(e)
 
       }finally{
-        commit('setHomeLoading', false)
 
+        commit('setHomeLoading', false)
         console.log('actions getAllBooks off')
+
       }
       
 
@@ -254,20 +264,21 @@ export default new Vuex.Store({
           result = await axios.post('/api/getNoAbsBooks',{url})
         }
 
+        
       }catch(e){
-  
-        dispatch("showErrMessage",e.message)
+        
+        await dispatch("showErrMessage",e.message)
         throw new Error(e)
-
+        
       }finally{
-        console.log("getBookIndex after",result.length)
+        console.log("getBookIndex after", result)
+        if(result && result.data){
+          await dispatch("keepHTML",result.data)
+        }
         commit("setIndexLoading",false)
         console.log('actions getBookIndex off')
       }
 
-      if(result.data){
-        await dispatch("keepHTML",result.data)
-      }
 
 
       

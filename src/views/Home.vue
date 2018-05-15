@@ -36,10 +36,15 @@
         <br />
     </li>
     </ul>
-    <div v-if="isLoading" class="loading" >
+    <div style="border:1px red solid;" v-if="messageForUser && books.length == 0">
+      Error: {{messageForUser}} 
+    </div>
+
+    <div v-else-if="isLoading" class="loading" >
       <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
-        </mt-spinner>
-        </div>
+      </mt-spinner>
+    </div>
+
     <div v-else-if="books.length == 0">no book , please start your own books trip</div>
   </div>
 </template>
@@ -98,7 +103,9 @@ export default {
     ...mapState({ // 1
       books:(state) => state.books,
       isLoading:state => state.isHomeLoading,
-      API:state => state.Api
+      API:state => state.Api,
+      messageForUser: state => state.messageForUser
+      
     })
   },
   mounted(){

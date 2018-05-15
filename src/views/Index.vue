@@ -23,7 +23,29 @@
         </div>
       </div>
 
-    <div v-if="isLoading"  class="loading" >
+    <div v-if="errMessage"  class="loading" >
+      {{errMessage}}
+    </div>
+
+          
+    <div v-else-if="HTML=='' && messageForUser"> 
+      请求 失败
+      <br>  
+    <div style="border:1px orange solid;">
+      {{apiSelected}}
+      <br>
+      {{path}}
+      <br>
+      {{messageForUser}}
+    </div>
+      <br>
+      如果你认为这个错误是个bug 
+      <br> 
+    <a style="color:red;" href="http://github.com/chinanf-boy/vue-getNoAbsBooks">
+      👉 提交bug</a> 
+    </div>
+    
+    <div v-else-if="isLoading">
       请求 
       <br>  
       {{apiSelected}}
@@ -31,18 +53,8 @@
       {{path}}
         <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
         </mt-spinner>
-    </div>
-    <div v-else-if="errMessage">{{errMessage}}</div>
-    <div v-else-if="HTML==''"> 
-      请求 失败
-      <br>  
-      {{apiSelected}}
-      <br>
-      {{path}}
-      如果你认为这个错误是个bug <br> 
-    <a style="color:red;" href="http://github.com/chinanf-boy/vue-getNoAbsBooks">
-      👉 提交bug</a> 
-    </div>
+      </div>
+
   </div>
 </template>
 
@@ -64,7 +76,9 @@ export default {
       fullurl: state => state.fullURL,
       apiSelected: state => state.apiSelected,
       HTML: state => state.HTML,
-      isLoading: state => state.isIndexLoading
+      isLoading: state => state.isIndexLoading,
+      messageForUser: state => state.messageForUser
+      
     })
   },
   mounted() {
