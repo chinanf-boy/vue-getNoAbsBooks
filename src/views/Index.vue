@@ -90,6 +90,7 @@ export default {
     console.log("Index mounted off");
   },
   created() {
+    this.$store.commit("setHtml", ""); // Fix ole muen
     /* eslint-disable */
     this.$router.afterEach((to, from) => {
       console.log("run router", to.path);

@@ -314,7 +314,7 @@ export default new Vuex.Store({
 
       console.log("getBookIndex before", url);
 
-      let notUserAction;
+      let notUserAction = true;
 
       try {
         if ((file || urlPathLen > 3) && (await localforage.getItem(`${url}`))) {
