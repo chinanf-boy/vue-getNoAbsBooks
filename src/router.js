@@ -5,7 +5,6 @@ import About from "./views/About.vue";
 
 import BookIndex from "./views/Index.vue";
 
-
 Vue.use(Router);
 
 export default new Router({

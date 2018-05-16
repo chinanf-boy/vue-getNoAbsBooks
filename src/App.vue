@@ -26,98 +26,94 @@
 </template>
 
 <script>
-import { mapState,mapActions } from 'vuex'
+import { mapState } from "vuex";
 
-  export default {
-    name: "App",
-    data:function(){
-      return {
-        popupVisible:false
-      }
-    },
-    created:function(){
-      console.log("app created on")
-      // this.Init()
-      console.log("app created off")
-    },
-    mounted:function(){
-      console.log("app mounted on")
-      console.log("app mounted off")
-    },
-    methods:{
-      Init(){
-        console.log("app method Init on")
-        console.log("app method Init off")
-      }
-    },
-    computed:{
-      ...mapState({
-        isBlockLoading:(state) => state.isBlockLoading,
-        errMessage:(state) => state.errMessage,
-      })
-    },
-    watch:{
-      isBlockLoading:function(N){
-        this.popupVisible = N
-      }
+export default {
+  name: "App",
+  data: function() {
+    return {
+      popupVisible: false
+    };
+  },
+  created: function() {
+    console.log("app created on");
+    // this.Init()
+    console.log("app created off");
+  },
+  mounted: function() {
+    console.log("app mounted on");
+    console.log("app mounted off");
+  },
+  methods: {
+    Init() {
+      console.log("app method Init on");
+      console.log("app method Init off");
     }
-
-    
+  },
+  computed: {
+    ...mapState({
+      isBlockLoading: state => state.isBlockLoading,
+      errMessage: state => state.errMessage
+    })
+  },
+  watch: {
+    isBlockLoading: function(N) {
+      this.popupVisible = N;
+    }
   }
+};
 </script>
 <style>
 .back_r {
-    padding: 0 1rem;
-    height: 2rem;
-    margin: 1rem 30%;
-    line-height: 2rem;
-    font-size: 1rem;
-    background-color: #65bbec;
-    border-radius: rem;
-    width: auto;
+  padding: 0 1rem;
+  height: 2rem;
+  margin: 1rem 30%;
+  line-height: 2rem;
+  font-size: 1rem;
+  background-color: #65bbec;
+  border-radius: rem;
+  width: auto;
 }
 .back_r a {
-  color:#fff;
+  color: #fff;
 }
-.block{
-  color:#666;
+.block {
+  color: #666;
 }
- .intro_info {
-  color:#666;    
- }
-.ablum_read span{
-    background: #65bbec;
-    border-radius: 3px;
-    height: auto;
-    line-height: 40px;
-    text-align: center;
-    width: 51%;
-    float: left;
-    margin: auto auto;
+.intro_info {
+  color: #666;
+}
+.ablum_read span {
+  background: #65bbec;
+  border-radius: 3px;
+  height: auto;
+  line-height: 40px;
+  text-align: center;
+  width: 51%;
+  float: left;
+  margin: auto auto;
 }
 .ablum_read span a {
   color: #fff;
-
 }
 
 .intro {
-    border-bottom: 1px solid #65bbec;
-    background: #ECF0F0;
-    height: 35px;
-    line-height: 38px;
-    padding-left: 8px;
-    font-weight: 700;
-    font-size: 15px;
-    color: #000;
-    margin: 1rem;
-    
+  border-bottom: 1px solid #65bbec;
+  background: #ecf0f0;
+  height: 35px;
+  line-height: 38px;
+  padding-left: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #000;
+  margin: 1rem;
 }
 
-.chapter{
+.chapter {
   text-align: left;
 }
 
-.chapter li{
+.chapter li {
   border-bottom: 1px solid #efefef;
   text-indent: 10px;
   height: 40px;
@@ -151,21 +147,21 @@ table {
 }
 
 *:focus {
-      outline: none;
-    }
+  outline: none;
+}
 
 html {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  font: 16px/1.5 'microsoft yahei';
+  font: 16px/1.5 "microsoft yahei";
 }
 
 body {
   text-align: left;
   width: 100%;
   margin: 0;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, .05);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
   -webkit-touch-callout: initial;
   -webkit-user-select: none;
   background-color: #fbf6ec;
@@ -189,7 +185,7 @@ li {
   color: #000;
   background-color: #fbf6ec;
 }
-.loading{
+.loading {
   width: 100%;
   position: absolute;
 }
@@ -207,37 +203,37 @@ li {
 }
 
 .nr_page a {
-    border-radius: .533333vw;
-    background-color: #56d176;
-    color: #fff;
-    padding: 0 2.666667vw 0 2.666667vw;
-    min-width: 32vw;
-    text-align: center;
-    font-size: 1.5rem;
-    font-family: inherit;
+  border-radius: 0.533333vw;
+  background-color: #56d176;
+  color: #fff;
+  padding: 0 2.666667vw 0 2.666667vw;
+  min-width: 32vw;
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: inherit;
 }
 button {
-font-size: 1rem;
-background-color: #7B72E9;
-border-color: #7B72E9;
-color: #FFF;
-font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial,
-"Lucida Grande", sans-serif;
-text-decoration: none;
-text-align: center;
-line-height: 3rem;
-height: 3rem;
-padding: 0 2rem;
-display: inline-block;
-appearance: none;
-cursor: pointer;
-border: none;
-border-top-color: currentcolor;
-box-sizing: border-box;
-transition-property: all;
-transition-duration: 0.3s;
-margin: 1em;
-font-weight: normal;
+  font-size: 1rem;
+  background-color: #7b72e9;
+  border-color: #7b72e9;
+  color: #fff;
+  font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial,
+    "Lucida Grande", sans-serif;
+  text-decoration: none;
+  text-align: center;
+  line-height: 3rem;
+  height: 3rem;
+  padding: 0 2rem;
+  display: inline-block;
+  appearance: none;
+  cursor: pointer;
+  border: none;
+  border-top-color: currentcolor;
+  box-sizing: border-box;
+  transition-property: all;
+  transition-duration: 0.3s;
+  margin: 1em;
+  font-weight: normal;
 }
 footer {
   position: absolute;

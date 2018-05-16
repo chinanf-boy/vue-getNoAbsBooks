@@ -61,17 +61,16 @@
 </template>
 
 <script>
-import {mapState, mapActions, mapMutations} from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import localforage from "localforage";
-import debounce from 'lodash.debounce';
+import debounce from "lodash.debounce";
 
 export default {
   name: "BookIndex",
   data: function() {
     return {
       path: "",
-      fontSize: null,
-      OnlyOneRunning:[]
+      fontSize: null
     };
   },
   computed: {
@@ -82,7 +81,6 @@ export default {
       HTML: state => state.HTML,
       isLoading: state => state.isIndexLoading,
       messageForUser: state => state.messageForUser
-      
     })
   },
   mounted() {
@@ -92,90 +90,90 @@ export default {
     console.log("Index mounted off");
   },
   created() {
+    /* eslint-disable */
     this.$router.afterEach((to, from) => {
       console.log("run router", to.path);
-      this.setIndexLoading(true) // we must show the user, app running quickly      
+      this.setIndexLoading(true); // we must show the user, app running quickly
       this.setBlockLoading(false);
       // need to get time
       console.log("Index methods getPath 2222");
-      
-      this.getPath()
+
+      this.getPath();
 
       // this.path = to.path; // 给 watch 启动启动
       console.log("run router set", this.fontSize, this.setFont);
     });
   },
   methods: {
-    ...mapMutations(["setBlockLoading","setPendingLoad","setIndexLoading"]),
-    ...mapActions(["showErrMessage","getBookIndex"]),
+    ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading"]),
+    ...mapActions(["showErrMessage", "getBookIndex"]),
     getPath() {
       console.log("Index methods getPath on");
       this.path = this.$route.path;
       console.log("Index methods getPath off");
     },
-    addLoad( ing ){
+    addLoad(ing) {
       console.log("Index methods addLoad on");
-      
-      
-      this.setPendingLoad(ing)
-      
-      this.OnlyOneRunning = []
-      // this.OnlyOneRunning.push(
-      //   )
-      this.getBookPage()
+
+      this.setPendingLoad(ing);
+
+      this.getBookPage();
       console.log("Index methods addLoad off");
-      
     },
-    getBookPage: debounce(function(){
-      console.log("Index methods getBookPage on", this.apiSelected, this.path);
-      console.log("Index watch path on 1111");
+    getBookPage: debounce(
+      function() {
+        console.log(
+          "Index methods getBookPage on",
+          this.apiSelected,
+          this.path
+        );
+        console.log("Index watch path on 1111");
 
-      this.getBookIndex(this.path)
-        .then(res => {
-          
-          let T = 0
-          let Wait;
-          waitChapter()
-          function waitChapter(){
+        this.getBookIndex(this.path)
+          .then(res => {
+            console.log(" Index getBookPage result =>", res);
+            let T = 0;
+            waitChapter();
+            function waitChapter() {
+              if (document.getElementsByClassName("chapter").length > 0) {
+                // in phone HTML != document is no sync， there have time less
 
-            if(document.getElementsByClassName("chapter").length > 0){
-            // in phone HTML != document is no sync， there have time less
-                  Wait = null
+                let ul1 = document.getElementsByClassName("chapter");
 
-                  let ul1 = document.getElementsByClassName("chapter") 
-  
-                  
-                  let ul = Array.from(ul1)
-                
-                  ul.forEach(x =>{
-                    x.style.display = ''
-                  })
-                  console.log("getBookPage HTML ✅",ul1);
-            }else{
+                let ul = Array.from(ul1);
 
-              console.log(`getBookPage HTML put the document
+                ul.forEach(x => {
+                  x.style.display = "";
+                });
+                console.log("getBookPage HTML ✅", ul1);
+              } else {
+                console.log(
+                  `getBookPage HTML put the document
               is no sync,there have time less
-              in phone `+T)
+              in phone ` + T
+                );
 
-              if(T<3){
-                T ++      
-                Wait = setTimeout(waitChapter,1)
-              }else{
-                // throw new Error("o see like error HTML")
+                if (T < 3) {
+                  T++;
+                  setTimeout(waitChapter, 1);
+                } else {
+                  // throw new Error("o see like error HTML")
+                }
               }
             }
-        }
-        })
-        .catch(err => {
-          console.log("getBookPage ❌",err);
-        });
-      console.log(
-        "Index methods getBookPage off",
-        this.apiSelected,
-        this.path
-      );
-      },100,{
-        'trailing':true
+          })
+          .catch(err => {
+            console.log("getBookPage ❌", err);
+          });
+        console.log(
+          "Index methods getBookPage off",
+          this.apiSelected,
+          this.path
+        );
+      },
+      100,
+      {
+        trailing: true
       }
     ),
     async getFontSize() {
@@ -191,14 +189,14 @@ export default {
       console.log(
         "setFont localforage",
         await localforage.getItem("user-fontsize")
-      ); // every time refs
-
+      );
+      // every time refs
     }
   },
   watch: {
     path: function(N) {
       console.log("Index watch path on");
-      this.addLoad(N)
+      this.addLoad(N);
       console.log("Index watch path off");
     },
     fontSize: function(n) {

@@ -52,154 +52,145 @@
 
 <script>
 // @ is an alias to /src
-import { mapActions, mapState } from "vuex"
+import { mapActions, mapState } from "vuex";
 import HelloWorld from "@/components/HelloWorld.vue";
-import mergeUri from "@/util";
 import URI from "urijs";
-
 
 export default {
   name: "home",
   data() {
     return {
       Input: "2222/",
-      apiSelected:"",
-      pathName:""
+      apiSelected: "",
+      pathName: ""
     };
   },
-  created(){ // 2
-    console.log("home created on")
+  created() {
+    // 2
+    console.log("home created on");
 
-    this.apiSelected = this.API[0]
+    this.apiSelected = this.API[0];
 
-    this.syncApi(this.API[0])
+    this.syncApi(this.API[0]);
 
-    console.log("home created off")
+    console.log("home created off");
   },
-  computed:{
-    fullURL:{
-      get:function(){
-        let U = new URI(this.apiSelected)
+  computed: {
+    fullURL: {
+      get: function() {
+        let U = new URI(this.apiSelected);
 
-        if(this.pathName != ''){
-          U.pathname(this.pathName)
+        if (this.pathName != "") {
+          U.pathname(this.pathName);
         }
-        
-        console.log('computed fullURL get',U.href()) // 3
-        return U.href()
-      },
-      set:function(N){
-          console.log('computed fullURL set',N)
-          let U = new URI(N)
-          this.apiSelected = U.origin()
 
-          if(U.pathname() == '/'){
-            this.pathName = ""
-          }else{
-            this.pathName = U.pathname()          
-          }
+        console.log("computed fullURL get", U.href()); // 3
+        return U.href();
+      },
+      set: function(N) {
+        console.log("computed fullURL set", N);
+        let U = new URI(N);
+        this.apiSelected = U.origin();
+
+        if (U.pathname() == "/") {
+          this.pathName = "";
+        } else {
+          this.pathName = U.pathname();
+        }
       }
     },
 
-    ...mapState({ // 1
-      books:(state) => state.books,
-      isLoading:state => state.isHomeLoading,
-      API:state => state.Api,
+    ...mapState({
+      // 1
+      books: state => state.books,
+      isLoading: state => state.isHomeLoading,
+      API: state => state.Api,
       messageForUser: state => state.messageForUser
-      
     })
   },
-  mounted(){
-    console.log("Home mounted on")
+  mounted() {
+    console.log("Home mounted on");
 
-    this.getBooks()
+    this.getBooks();
 
-    this.changeInput()
+    this.changeInput();
 
-    this.$refs.In.focus()
+    this.$refs.In.focus();
 
-    console.log("Home mounted off")
-    
+    console.log("Home mounted off");
   },
   methods: {
-      ...mapActions(['showErrMessage','syncApi','getAllBooks']), 
-    setA(N){
-      console.log('book.origin set ApiSelected ',N)
-     this.syncApi(N)
+    ...mapActions(["showErrMessage", "syncApi", "getAllBooks"]),
+    setA(N) {
+      console.log("book.origin set ApiSelected ", N);
+      this.syncApi(N);
     },
-    getBooks(){
-      console.log('Home methods getBooks on')
-      this.getAllBooks().catch(err =>{
-          console.log('getAllBooks ❌',err.message)
-        })
-      console.log('Home methods getBooks off')
-      
+    getBooks() {
+      console.log("Home methods getBooks on");
+      this.getAllBooks().catch(err => {
+        console.log("getAllBooks ❌", err.message);
+      });
+      console.log("Home methods getBooks off");
     },
-    textInput(){
-      
-      if(!this.Input){
-        this.showErrMessage("请输入正确 书籍")
-        return 
+    textInput() {
+      if (!this.Input) {
+        this.showErrMessage("请输入正确 书籍");
+        return;
       }
 
-      let fullUrl = this.fullURL
-      this.$store.commit("setFullURL", this.fullURL)
-      this.addJsonStore(fullUrl).catch(err =>{
+      let fullUrl = this.fullURL;
+      this.$store.commit("setFullURL", this.fullURL);
+      this.addJsonStore(fullUrl).catch(err => {
         // error message show
-        this.showErrMessage(err)
-      })
+        this.showErrMessage(err);
+      });
 
+      let uRI = new URI(fullUrl);
 
-      let uRI = new URI(fullUrl)
-
-      if(uRI.suffix()){
-        this.$store.commit('changeSuffix', uRI.suffix())
+      if (uRI.suffix()) {
+        this.$store.commit("changeSuffix", uRI.suffix());
       }
-      console.log('method textInput route to ',uRI.pathname())
-      this.$router.push({ path:`${uRI.pathname()}`})
-      
-      },
-    getFull(Input){
-
-      let fullUrl = this.$store.getters.getFullUrl(Input)
-
-      console.log('method getFull',fullUrl)
-
-      return fullUrl
+      console.log("method textInput route to ", uRI.pathname());
+      this.$router.push({ path: `${uRI.pathname()}` });
     },
-    addJsonStore(url){
-      return this.$store.dispatch('addJsonStore', url)
+    getFull(Input) {
+      let fullUrl = this.$store.getters.getFullUrl(Input);
+
+      console.log("method getFull", fullUrl);
+
+      return fullUrl;
     },
-    changeS(){
-      let U = new URI(this.API)
-      if(U.origin()){
-
-        this.$store.commit("changeApi", U.origin())
-
-      }else{
-        this.showErrMessage('确定 源是 url')
+    addJsonStore(url) {
+      return this.$store.dispatch("addJsonStore", url);
+    },
+    changeS() {
+      let U = new URI(this.API);
+      if (U.origin()) {
+        this.$store.commit("changeApi", U.origin());
+      } else {
+        this.showErrMessage("确定 源是 url");
       }
     },
-    changeInput(){
-      console.log('methods changeInput')
-      let fullUrl = this.getFull(this.Input)
-      console.log('methods changeInput getURL')
-      if(!this.Input){
-        fullUrl = this.apiSelected
+    changeInput(In) {
+      console.log("methods changeInput");
+      let fullUrl = this.getFull(In);
+      console.log("methods changeInput getURL");
+      if (!In) {
+        fullUrl = this.apiSelected;
       }
 
-      let F = new URI(fullUrl)
+      let F = new URI(fullUrl);
 
-      this.pathName = F.pathname()
+      this.pathName = F.pathname();
     }
   },
   watch: {
-    apiSelected:function(N){
-      this.$store.commit("setApiSelected", N)
+    apiSelected: function(N) {
+      this.$store.commit("setApiSelected", N);
     },
-    Input:function(N){
-      console.log('watch Input')
-      this.changeInput()
+    Input: function(N) {
+      console.log("watch Input");
+      this.changeInput(N);
     }
   },
   components: {
@@ -218,13 +209,13 @@ select {
   background-color: #999;
 }
 .book-list {
-    /* text-align: left; */
-    border-bottom: 1px solid #efefef;
-    text-indent: 0.6rem;
-    height: 3rem;
-    line-height: 3rem;
-    color: #999;
-    margin-right: 1rem;
+  /* text-align: left; */
+  border-bottom: 1px solid #efefef;
+  text-indent: 0.6rem;
+  height: 3rem;
+  line-height: 3rem;
+  color: #999;
+  margin-right: 1rem;
 }
 .book_origin {
   width: 49%;
@@ -235,16 +226,16 @@ select {
   overflow: hidden;
 }
 .book_click {
-  color: #FFF;
+  color: #fff;
   font-weight: normal;
 }
 .home_book {
   margin: 0;
-  background-color: #93875F;
-  border:1px orange solid;
+  background-color: #93875f;
+  border: 1px orange solid;
   padding: 0 1rem;
   font-size: 1rem;
-  color: #FFF;
+  color: #fff;
   text-decoration: none;
   text-align: center;
   line-height: 3rem;
@@ -258,7 +249,6 @@ select {
   transition-duration: 0.3s;
 }
 input {
-  width: 80%
+  width: 80%;
 }
 </style>
-

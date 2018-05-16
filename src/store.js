@@ -1,113 +1,109 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "./http";
-import URI from "urijs"
-require('@/util')
+import URI from "urijs";
+require("@/util");
 Vue.use(Vuex);
 
-import localforage from 'localforage'
-
+import localforage from "localforage";
 
 export default new Vuex.Store({
   state: {
     // App
-    isBlockLoading:false,
-    errMessage:"",
-    pendingLoad:"",
+    isBlockLoading: false,
+    errMessage: "",
+    pendingLoad: "",
     // Home
     books: [],
-    Api: ["http://m.76wx.com","http://m.zwdu.com"],
-    apiSelected:"",
+    Api: ["http://m.76wx.com", "http://m.zwdu.com"],
+    apiSelected: "",
     suffix: "html",
     directory: "book",
-    fullURL: '',
-    
+    fullURL: "",
+
     // Index
-    HTML:"",
-    isIndexLoading:false,
-    messageForUser:"",
+    HTML: "",
+    isIndexLoading: false,
+    messageForUser: "",
     // status
-    isHomeLoading:false
+    isHomeLoading: false
   },
   mutations: {
     // App
     clearBooks(state) {
-      state.books = []
+      state.books = [];
     },
-    setBlockLoading(state, bool){
-      state.isBlockLoading = bool
+    setBlockLoading(state, bool) {
+      state.isBlockLoading = bool;
     },
-    setPendingLoad(state, str){
-      console.log('mutations:setPendingLoad',str)      
-      if(state.pendingLoad != str){
-        state.pendingLoad = str
+    setPendingLoad(state, str) {
+      console.log("mutations:setPendingLoad", str);
+      if (state.pendingLoad != str) {
+        state.pendingLoad = str;
       }
     },
-    setErrMessage(state, err){
-      console.log("mutations setErrMessage on")
-      state.errMessage = err
-      console.log("mutations setErrMessage off")
-      
+    setErrMessage(state, err) {
+      console.log("mutations setErrMessage on");
+      state.errMessage = err;
+      console.log("mutations setErrMessage off");
     },
     // Home
-    setFullURL(state, str){
-      state.fullURL = str
+    setFullURL(state, str) {
+      state.fullURL = str;
     },
-    setApiSelected(state, str){
-      console.log('mutations:setApiSelected',str)
-      state.apiSelected = str
+    setApiSelected(state, str) {
+      console.log("mutations:setApiSelected", str);
+      state.apiSelected = str;
     },
-    setHomeLoading(state, bool){
-      state.isHomeLoading = bool
+    setHomeLoading(state, bool) {
+      state.isHomeLoading = bool;
     },
     addBooks(state, data) {
-      Object.keys(data).forEach(
-        bookName => {
-          state.books.push(data[bookName])
-        }
-      )
+      Object.keys(data).forEach(bookName => {
+        state.books.push(data[bookName]);
+      });
     },
-    changeApi(state, data){
-    state.Api = data
+    changeApi(state, data) {
+      state.Api = data;
     },
-    changeSuffix(state, data){
-      state.suffix = data
+    changeSuffix(state, data) {
+      state.suffix = data;
     },
     // Index
-    setHtml(state, h){
-      state.HTML = h
+    setHtml(state, h) {
+      state.HTML = h;
     },
-    setIndexLoading(state, bool){
-      state.isIndexLoading = bool
+    setIndexLoading(state, bool) {
+      state.isIndexLoading = bool;
     },
-    setMessageForUser(state, h){
-      state.messageForUser = h
+    setMessageForUser(state, h) {
+      state.messageForUser = h;
     }
   },
-  getters:{
-
-    // 
-    getFullUrl(state){
-      return (Input) =>{
-        let U = new URI(state.apiSelected)
-        let addS = ''
-        if(Input.endsWith('/')){
-          addS = '/'
+  getters: {
+    //
+    getFullUrl(state) {
+      return Input => {
+        let U = new URI(state.apiSelected);
+        let addS = "";
+        if (Input.endsWith("/")) {
+          addS = "/";
         }
-        Input = Input.trimStr('/') // trim /
-        console.log('getter getFUll Input',Input)
-        
-        U.directory(state.directory)
-        U.segment(Input)
-        if(U.segment().length == 2){ // 4
+        Input = Input.trimStr("/"); // trim /
+        console.log("getter getFUll Input", Input);
+
+        U.directory(state.directory);
+        U.segment(Input);
+        if (U.segment().length == 2) {
+          // 4
           // console.log('1', 4)
-            if(addS && !U.href().endsWith('/')){
-              U.segment(addS)
-              addS = ""
-            }else if(!U.suffix()){
-              U.suffix(state.suffix)
-            }
-            return U.href()
+          if (addS && !U.href().endsWith("/")) {
+            U.segment(addS);
+            addS = "";
+          } else if (!U.suffix()) {
+            U.suffix(state.suffix);
+          }
+          return U.href();
         }
         // console.log(U.href())
         // U.href()
@@ -116,274 +112,250 @@ export default new Vuex.Store({
         // 3. http://example.org/book/123234/123234 => book details or book index
         // 4. http://example.org/book/123234 => book index
         // 5. http://example.org/book/123234/21342/2423443 => book details
-        
-        console.log('getter getFUll',U.href())
 
+        console.log("getter getFUll", U.href());
 
+        U.pathname(Input);
 
-        U.pathname(Input)
-
-
-        if(addS && !U.href().endsWith('/')){
-          U.segment(addS)
-          addS = ""
-        }else if(!U.suffix()){
-          U.suffix(state.suffix)
+        if (addS && !U.href().endsWith("/")) {
+          U.segment(addS);
+          addS = "";
+        } else if (!U.suffix()) {
+          U.suffix(state.suffix);
         }
 
-        return U.href()
-        
-      }
+        return U.href();
+      };
     }
   },
   actions: {
     // App
-    axiosWithCancel: async function({state},{method, path, postForm, options}){
+    axiosWithCancel: async function(
+      { state },
+      { method, path, postForm, options }
+    ) {
       const CancelToken = axios.CancelToken;
       const source = CancelToken.source();
       options = {
         cancelToken: source.token
-      }
-      return new Promise((ok,bad) =>{
-
-        let R
-        let T = 1
-        axios[method](path,postForm,options).then(res =>{
-          T = null
-          ok(res)
-        }).catch(thrown =>{
-          T = null          
-          if (axios.isCancel(thrown)) {
-            bad('Request canceled '+ thrown.message);
-          } else {
-            bad(thrown)
-          }
-        })
-        
-        let N = function(){
-          R = setTimeout(()=>{
-            console.log("axiosWithCancel run run run",state.fullURL,postForm.url)
-            if(state.fullURL !== postForm.url){
-              console.log('Operation canceled 自己会说一次')
-              source.cancel('Operation canceled by the user.');
-              T = null
-            }else if(T){
-              N()
+      };
+      return new Promise((ok, bad) => {
+        let T = 1;
+        axios[method](path, postForm, options)
+          .then(res => {
+            T = null;
+            ok(res);
+          })
+          .catch(thrown => {
+            T = null;
+            if (axios.isCancel(thrown)) {
+              bad("Request canceled " + thrown.message);
+            } else {
+              bad(thrown);
             }
-          },33)
-        }
-          
-        N()
-      })
-    },
-    initApiSelected: async function({commit,dispatch,state}){
-      console.log("action initApiSelected on")
-      
-      let api = await localforage.getItem("user-apiselected")
+          });
 
-      if(api){
-        commit("setApiSelected", api)
-      }else{
-        commit("setApiSelected", state.Api[0])        
-      }
-      
-      console.log("action initApiSelected off")
-      
-    },
-    syncApi: async function({commit}, a){
-      console.log("action syncApi on",a)
-      commit("setApiSelected",a)
-      localforage.setItem("user-apiselected",a)
-      console.log("action syncApi off",a)
-    },
-    showErrMessage: async function({commit, dispatch}, errMessage){
-      if(errMessage){
-        commit("setBlockLoading", true)
-  
-        commit("setErrMessage", errMessage)
+        let N = function() {
+          setTimeout(() => {
+            console.log(
+              "axiosWithCancel run run run",
+              state.fullURL,
+              postForm.url
+            );
+            if (state.fullURL !== postForm.url) {
+              console.log("Operation canceled 自己会说一次");
+              source.cancel("Operation canceled by the user.");
+              T = null;
+            } else if (T) {
+              N();
+            }
+          }, 33);
+        };
 
-        
-        dispatch("waitTime", 1000)
-        
-        commit("setBlockLoading", false)
-        
-        commit("setErrMessage", "")
-        
-        commit("setMessageForUser", errMessage)
+        N();
+      });
+    },
+    initApiSelected: async function({ commit, state }) {
+      console.log("action initApiSelected on");
+
+      let api = await localforage.getItem("user-apiselected");
+
+      if (api) {
+        commit("setApiSelected", api);
+      } else {
+        commit("setApiSelected", state.Api[0]);
+      }
+
+      console.log("action initApiSelected off");
+    },
+    syncApi: async function({ commit }, a) {
+      console.log("action syncApi on", a);
+      commit("setApiSelected", a);
+      localforage.setItem("user-apiselected", a);
+      console.log("action syncApi off", a);
+    },
+    showErrMessage: async function({ commit, dispatch }, errMessage) {
+      if (errMessage) {
+        commit("setBlockLoading", true);
+
+        commit("setErrMessage", errMessage);
+
+        dispatch("waitTime", 1000);
+
+        commit("setBlockLoading", false);
+
+        commit("setErrMessage", "");
+
+        commit("setMessageForUser", errMessage);
       }
     },
-    waitTime: async function({commit},time){
-      await new Promise((ok,bad) =>{
-        try{
-          setTimeout(ok, time)
-        }catch(e){
-          bad(e)
+    waitTime: async function(time) {
+      await new Promise((ok, bad) => {
+        try {
+          setTimeout(ok, time);
+        } catch (e) {
+          bad(e);
         }
-      })
+      });
     },
     // Home
-    addJsonStore(state, url){
-      console.log('adding jsonstore',url)
-      return axios.post('/api/addJsonStore', {url}).then(res =>{
-        console.log('add jsonstore',res.data.ok)
-      })
+    addJsonStore(state, url) {
+      console.log("adding jsonstore", url);
+      return axios.post("/api/addJsonStore", { url }).then(res => {
+        console.log("add jsonstore", res.data.ok);
+      });
     },
-    getAllBooks:async function({
-      commit,dispatch
-    }) {
-      console.log('actions getAllBooks on')
-      
-      commit('setHomeLoading', true)
+    getAllBooks: async function({ commit, dispatch }) {
+      console.log("actions getAllBooks on");
 
-      commit('clearBooks')
+      commit("setHomeLoading", true);
 
-      let result
-      try{
+      commit("clearBooks");
 
-         result = await axios.get('/api/getAllBooks').then(res => {
-          commit("addBooks", res.data.result)
-          })
-          
-      }catch(e){
-
-        await dispatch("showErrMessage",e.message)
-        throw new Error(e)
-
-      }finally{
-
-        commit('setHomeLoading', false)
-        console.log('actions getAllBooks off')
-
+      let result;
+      try {
+        result = await axios.get("/api/getAllBooks").then(res => {
+          commit("addBooks", res.data.result);
+        });
+      } catch (e) {
+        await dispatch("showErrMessage", e.message);
+        throw new Error(e);
+      } finally {
+        commit("setHomeLoading", false);
+        console.log("actions getAllBooks off");
       }
-      
 
-      return result
-      
+      return result;
     },
     // Index
-    keepHTML:async function({commit,state},html){
-      console.log("action keepHTML on",state.fullURL)
-      await localforage.setItem(`${state.fullURL}`,html)
-      commit("setHtml",html)
-      console.log("action keepHTML off")
+    keepHTML: async function({ commit, state }, html) {
+      console.log("action keepHTML on", state.fullURL);
+      await localforage.setItem(`${state.fullURL}`, html);
+      commit("setHtml", html);
+      console.log("action keepHTML off");
     },
-    copyHTML:async function({commit,state}){
-      console.log("action copyHTML on",state.fullURL)
-      let H = await localforage.getItem(`${state.fullURL}`)
-      console.log("action copyHTML off")
-      return H
+    copyHTML: async function({ state }) {
+      console.log("action copyHTML on", state.fullURL);
+      let H = await localforage.getItem(`${state.fullURL}`);
+      console.log("action copyHTML off");
+      return H;
     },
-    getBookIndex:async function({
-      commit, state, getters, dispatch
-    }, path ) {
-      
-      commit("setIndexLoading",true)
+    getBookIndex: async function({ commit, state, dispatch }, path) {
+      commit("setIndexLoading", true);
 
       // if(path !== state.pendingLoad) return
 
-      let FULLRUL = false
-      if(path.startsWith("/")){
-        let test = path.substring(1)
-        let url = new URI(test)
-        if(url.origin()){
-          FULLRUL = true
-          path = test
+      if (path.startsWith("/")) {
+        let mayFULLURL = path.substring(1);
+        let url = new URI(mayFULLURL);
+        if (url.origin()) {
+          path = mayFULLURL;
         }
       }
 
-      let url = new URI(path)
-      
-      console.log('actions getBookIndex on',url.href())
+      let url = new URI(path);
+
+      console.log("actions getBookIndex on", url.href());
 
       // set origin to ApiSelected on
-      if(url.origin()){ // fullurl just no action
-        dispatch("syncApi", url.origin())
-        console.log('getBookIndex syncApi set 👇')
+      if (url.origin()) {
+        // fullurl just no action
+        dispatch("syncApi", url.origin());
+        console.log("getBookIndex syncApi set 👇");
       }
 
-      if(!state.apiSelected){
-        console.log('getBookIndex syncApi set 👆')        
-        await dispatch("initApiSelected")
+      if (!state.apiSelected) {
+        console.log("getBookIndex syncApi set 👆");
+        await dispatch("initApiSelected");
       }
       // set origin to ApiSelected off
 
-
-      console.log('setFullURL before',state.fullURL)
+      console.log("setFullURL before", state.fullURL);
 
       let newFullurl;
-      if(url.origin()){
-        newFullurl = url
-      }else{
-        newFullurl = url.origin(state.apiSelected)
+      if (url.origin()) {
+        newFullurl = url;
+      } else {
+        newFullurl = url.origin(state.apiSelected);
       }
-      commit("setFullURL", newFullurl.href()) // change fullURL    
+      commit("setFullURL", newFullurl.href()); // change fullURL
 
-      console.log('setFullURL after',state.fullURL)
-    
+      console.log("setFullURL after", state.fullURL);
+
       // get newFullurl
-      
-      let result
-      let urlPathLen = newFullurl.segment().length
-      let fileSuffix = newFullurl.suffix()
-      let fileName = newFullurl.filename()
-      let file = !!(fileSuffix && !fileName.includes('index_'))
 
-      url = newFullurl.href()
+      let result;
+      let urlPathLen = newFullurl.segment().length;
+      let fileSuffix = newFullurl.suffix();
+      let fileName = newFullurl.filename();
+      let file = !!(fileSuffix && !fileName.includes("index_"));
 
-      console.log("getBookIndex before",url)
+      url = newFullurl.href();
 
-      let isUserAction
+      console.log("getBookIndex before", url);
 
-      try{
+      let notUserAction;
 
-        if( ((file || urlPathLen > 3)  && await localforage.getItem(`${url}`)) ){
-          console.log('copyHTML',fileSuffix,urlPathLen,url)
-          result = await dispatch("copyHTML")
-        }else{
-          commit("setHtml",'')
-          result = await dispatch("axiosWithCancel",{
-            method:"post",
-            path:"/api/getNoAbsBooks",
-            postForm:{url}
-          })
+      try {
+        if ((file || urlPathLen > 3) && (await localforage.getItem(`${url}`))) {
+          console.log("copyHTML", fileSuffix, urlPathLen, url);
+          result = await dispatch("copyHTML");
+        } else {
+          commit("setHtml", "");
+          result = await dispatch("axiosWithCancel", {
+            method: "post",
+            path: "/api/getNoAbsBooks",
+            postForm: { url }
+          });
           // result = await axios.post('/api/getNoAbsBooks',{url})
         }
-                      
-        if(result && result.data){
 
-        }else{
-          let R = {}
-          R.data = result
-          R.status = 200
-          result = R
+        if (result && !result.data) {
+          let R = {};
+          R.data = result;
+          R.status = 200;
+          result = R;
         }
 
-        console.log("getBookIndex after", result.data)
-        await dispatch("keepHTML",result.data)
+        console.log("getBookIndex after", result.data);
+        await dispatch("keepHTML", result.data);
 
-        return result
-        
-      }catch(e){
-        commit("setHtml","")
-        
-        isUserAction = !e.message
+        return result;
+      } catch (e) {
+        commit("setHtml", "");
 
-        dispatch("showErrMessage",e.message || e)
+        notUserAction = !!e.message;
+
+        dispatch("showErrMessage", e.message || e);
         // Fix: Error html nothing
-        throw new Error(e)
-        
-      }finally{
-
-        if(isUserAction){
-
-        }else{
-          commit("setIndexLoading",false)
+        throw new Error(e);
+      } finally {
+        if (notUserAction) {
+          commit("setIndexLoading", false);
         }
 
-        console.log('actions getBookIndex off') 
+        console.log("actions getBookIndex off");
       }
-
-
     }
   }
 });
