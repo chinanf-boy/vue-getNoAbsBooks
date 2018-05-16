@@ -23,10 +23,19 @@
         </div>
       </div>
 
-    <div v-if="errMessage"  class="loading" >
+    <div v-if="errMessage && !isLoading"  class="loading" >
       {{errMessage}}
     </div>
-
+    
+   <div v-else-if="isLoading">
+      请求 
+      <br>  
+      {{apiSelected}}
+      <br>
+      {{path}}
+        <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
+        </mt-spinner>
+      </div>
           
     <div v-else-if="HTML=='' && messageForUser"> 
       请求 失败
@@ -45,15 +54,7 @@
       👉 提交bug</a> 
     </div>
     
-    <div v-else-if="isLoading">
-      请求 
-      <br>  
-      {{apiSelected}}
-      <br>
-      {{path}}
-        <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
-        </mt-spinner>
-      </div>
+ 
 
   </div>
 </template>
@@ -93,8 +94,6 @@ export default {
       this.setBlockLoading(false);
       this.path = to.path; // 给 watch 启动启动
       console.log("run router set", this.fontSize, this.setFont);
-
-      this.setFont(this.fontSize);
     });
   },
   methods: {
@@ -111,7 +110,12 @@ export default {
       this.$store
         .dispatch("getBookIndex", this.path)
         .then(res => {
-          console.log("getBookIndex ✅", res.length);
+          let ul = document.querySelectorAll("body .chapter")
+          console.log("getBookIndex ✅", res.length, ul);
+          ul = Array.from(ul)
+          ul.forEach(x =>{
+            x.style.display = ''
+          })
         })
         .catch(err => {
           console.log("getBookIndex ❌", err.message);
