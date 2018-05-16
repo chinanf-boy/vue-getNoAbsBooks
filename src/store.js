@@ -131,13 +131,15 @@ export default new Vuex.Store({
   },
   actions: {
     // App
-    initApiSelected: async function({commit,dispatch}){
+    initApiSelected: async function({commit,dispatch,state}){
       console.log("action initApiSelected on")
       
       let api = await localforage.getItem("user-apiselected")
 
       if(api){
         commit("setApiSelected", api)
+      }else{
+        commit("setApiSelected", state.Api[0])        
       }
       
       console.log("action initApiSelected off")
@@ -230,34 +232,61 @@ export default new Vuex.Store({
       commit, state, getters, dispatch
     }, path ) {
 
+      let FULLRUL = false
+      if(path.startsWith("/")){
+        let test = path.substring(1)
+        let url = new URI(test)
+        if(url.origin()){
+          FULLRUL = true
+          path = test
+        }
+      }
 
-      console.log('actions getBookIndex on',state.apiSelected)
-
+      let url = new URI(path)
+      
+      console.log('actions getBookIndex on',url.href())
       commit("setIndexLoading",true)
 
+      // set origin to ApiSelected on
+      if(url.origin()){ // fullurl just no action
+        dispatch("syncApi", url.origin())
+        console.log('getBookIndex syncApi set 👇')
+      }
+
       if(!state.apiSelected){
+        console.log('getBookIndex syncApi set 👆')        
         await dispatch("initApiSelected")
       }
-      
-      let url = new URI(state.apiSelected)
-      // just merge
-      url.pathname(path)
-      
-      console.log('getBookIndex',url.href())
-      
-      commit("setFullURL", url.href()) // change fullURL
-      
+      // set origin to ApiSelected off
 
-      // console.log('url', url)
-      // need html etc
-      url = url.href()
+
+      console.log('setFullURL before',state.fullURL)
+
+      let newFullurl;
+      if(url.origin()){
+        newFullurl = url
+      }else{
+        newFullurl = url.origin(state.apiSelected)
+      }
+      commit("setFullURL", newFullurl.href()) // change fullURL    
+
+      console.log('setFullURL after',state.fullURL)
+    
+      // get newFullurl
       
       let result
-      console.log("getBookIndex before",url)
+      let urlPathLen = newFullurl.segment().length
+      let fileSuffix = newFullurl.suffix()
+      let fileName = newFullurl.filename()
+      let file = !!(fileSuffix && !fileName.includes('index_'))
 
+      url = newFullurl.href()
+
+      console.log("getBookIndex before",url)
       try{
 
-        if(await localforage.getItem(`${url}`)){
+        if( ((file || urlPathLen > 3)  && await localforage.getItem(`${url}`)) ){
+          console.log('copyHTML',fileSuffix,urlPathLen,url)
           result = await dispatch("copyHTML")
         }else{
           commit("setHtml",'')
@@ -271,14 +300,15 @@ export default new Vuex.Store({
         throw new Error(e)
         
       }finally{
-        console.log("getBookIndex after", result)
-        if(result && result.data){
-          await dispatch("keepHTML",result.data)
-        }
+
         commit("setIndexLoading",false)
         console.log('actions getBookIndex off')
       }
-
+              
+      if(result && result.data){
+        console.log("getBookIndex after", result.data)
+        await dispatch("keepHTML",result.data)
+      }
 
 
       
