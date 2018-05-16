@@ -310,8 +310,6 @@ export default new Vuex.Store({
         await dispatch("keepHTML",result.data)
       }
 
-
-      
       return result
     }
   }

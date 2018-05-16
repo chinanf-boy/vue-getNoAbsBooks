@@ -110,15 +110,42 @@ export default {
       this.$store
         .dispatch("getBookIndex", this.path)
         .then(res => {
-          let ul = document.querySelectorAll("body .chapter")
-          console.log("getBookIndex ✅", res.length, ul);
-          ul = Array.from(ul)
-          ul.forEach(x =>{
-            x.style.display = ''
-          })
+          
+          let T = 0
+          let Wait;
+          waitChapter()
+          function waitChapter(){
+
+            if(document.getElementsByClassName("chapter").length > 0){
+            // in phone HTML != document is no sync， there have time less
+                  Wait = null
+
+                  let ul1 = document.getElementsByClassName("chapter") 
+  
+                  
+                  let ul = Array.from(ul1)
+                
+                  ul.forEach(x =>{
+                    x.style.display = ''
+                  })
+                  console.log("getBookIndex HTML ✅",ul1);
+            }else{
+
+              console.log(`getBookIndex HTML put the document
+              is no sync,there have time less
+              in phone `+T)
+
+              if(T<3){
+                T ++      
+                Wait = setTimeout(waitChapter,1)
+              }else{
+                throw new Error("o see like error HTML")
+              }
+            }
+        }
         })
         .catch(err => {
-          console.log("getBookIndex ❌", err.message);
+          console.log("getBookIndex ❌",err);
         });
       console.log(
         "Index methods getBookIndex off",
