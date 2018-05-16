@@ -8,6 +8,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
     <title>vue-getNoAbsBooks</title>
+    <script>
+      var SelectJs = function(event){
+        var A = document.createElement('a');
+        let href = window.location.href
+        if(href.includes('/index_')){
+          let RmHrefIndex = href.lastIndexOf('/')
+          href = href.substring(0, RmHrefIndex)
+        }
+        if(!href.endsWith('/')){
+          href += '/'
+        }
+
+        let selectValue = event.options[event.options.selectedIndex].value
+        if(selectValue.includes('/index_')){
+          let valueIndex = selectValue.lastIndexOf('/')
+          selectValue = selectValue.substring(valueIndex)
+        }
+        
+        if(selectValue.startsWith('/')){
+          selectValue = selectValue.substring(1)
+        }
+
+        A.href= href +selectValue ;
+
+        window.location.href = A.href
+        console.log('select route',A.href);
+      }
+    </script>
   </head>
   <body>
     <noscript>
