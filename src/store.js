@@ -13,6 +13,7 @@ export default new Vuex.Store({
     // App
     isBlockLoading:false,
     errMessage:"",
+    pendingLoad:"",
     // Home
     books: [],
     Api: ["http://m.76wx.com","http://m.zwdu.com"],
@@ -35,6 +36,12 @@ export default new Vuex.Store({
     },
     setBlockLoading(state, bool){
       state.isBlockLoading = bool
+    },
+    setPendingLoad(state, str){
+      console.log('mutations:setPendingLoad',str)      
+      if(state.pendingLoad != str){
+        state.pendingLoad = str
+      }
     },
     setErrMessage(state, err){
       console.log("mutations setErrMessage on")
@@ -131,6 +138,44 @@ export default new Vuex.Store({
   },
   actions: {
     // App
+    axiosWithCancel: async function({state},{method, path, postForm, options}){
+      const CancelToken = axios.CancelToken;
+      const source = CancelToken.source();
+      options = {
+        cancelToken: source.token
+      }
+      return new Promise((ok,bad) =>{
+
+        let R
+        let T = 1
+        axios[method](path,postForm,options).then(res =>{
+          T = null
+          ok(res)
+        }).catch(thrown =>{
+          T = null          
+          if (axios.isCancel(thrown)) {
+            bad('Request canceled '+ thrown.message);
+          } else {
+            bad(thrown)
+          }
+        })
+        
+        let N = function(){
+          R = setTimeout(()=>{
+            console.log("axiosWithCancel run run run",state.fullURL,postForm.url)
+            if(state.fullURL !== postForm.url){
+              console.log('Operation canceled 自己会说一次')
+              source.cancel('Operation canceled by the user.');
+              T = null
+            }else if(T){
+              N()
+            }
+          },33)
+        }
+          
+        N()
+      })
+    },
     initApiSelected: async function({commit,dispatch,state}){
       console.log("action initApiSelected on")
       
@@ -157,13 +202,14 @@ export default new Vuex.Store({
   
         commit("setErrMessage", errMessage)
 
-        commit("setMessageForUser", errMessage)
-
-        await dispatch("waitTime", 1000)
+        
+        dispatch("waitTime", 1000)
         
         commit("setBlockLoading", false)
         
         commit("setErrMessage", "")
+        
+        commit("setMessageForUser", errMessage)
       }
     },
     waitTime: async function({commit},time){
@@ -224,13 +270,16 @@ export default new Vuex.Store({
     copyHTML:async function({commit,state}){
       console.log("action copyHTML on",state.fullURL)
       let H = await localforage.getItem(`${state.fullURL}`)
-      commit("setHtml",H)
       console.log("action copyHTML off")
       return H
     },
     getBookIndex:async function({
       commit, state, getters, dispatch
     }, path ) {
+      
+      commit("setIndexLoading",true)
+
+      // if(path !== state.pendingLoad) return
 
       let FULLRUL = false
       if(path.startsWith("/")){
@@ -245,7 +294,6 @@ export default new Vuex.Store({
       let url = new URI(path)
       
       console.log('actions getBookIndex on',url.href())
-      commit("setIndexLoading",true)
 
       // set origin to ApiSelected on
       if(url.origin()){ // fullurl just no action
@@ -283,6 +331,9 @@ export default new Vuex.Store({
       url = newFullurl.href()
 
       console.log("getBookIndex before",url)
+
+      let isUserAction
+
       try{
 
         if( ((file || urlPathLen > 3)  && await localforage.getItem(`${url}`)) ){
@@ -290,27 +341,49 @@ export default new Vuex.Store({
           result = await dispatch("copyHTML")
         }else{
           commit("setHtml",'')
-          result = await axios.post('/api/getNoAbsBooks',{url})
+          result = await dispatch("axiosWithCancel",{
+            method:"post",
+            path:"/api/getNoAbsBooks",
+            postForm:{url}
+          })
+          // result = await axios.post('/api/getNoAbsBooks',{url})
+        }
+                      
+        if(result && result.data){
+
+        }else{
+          let R = {}
+          R.data = result
+          R.status = 200
+          result = R
         }
 
+        console.log("getBookIndex after", result.data)
+        await dispatch("keepHTML",result.data)
+
+        return result
         
       }catch(e){
+        commit("setHtml","")
         
-        await dispatch("showErrMessage",e.message)
+        isUserAction = !e.message
+
+        dispatch("showErrMessage",e.message || e)
+        // Fix: Error html nothing
         throw new Error(e)
         
       }finally{
 
-        commit("setIndexLoading",false)
-        console.log('actions getBookIndex off')
-      }
-              
-      if(result && result.data){
-        console.log("getBookIndex after", result.data)
-        await dispatch("keepHTML",result.data)
+        if(isUserAction){
+
+        }else{
+          commit("setIndexLoading",false)
+        }
+
+        console.log('actions getBookIndex off') 
       }
 
-      return result
+
     }
   }
 });
