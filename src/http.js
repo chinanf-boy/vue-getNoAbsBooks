@@ -11,6 +11,6 @@ if (process.env.BOOK_DEV) {
   axios.defaults.baseURL = "https://getnoabsbooks.herokuapp.com";
 }
 
-console.log(process.env.BookDev);
+// console.log(process.env.BookDev);
 
 export default axios;

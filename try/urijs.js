@@ -1,4 +1,4 @@
-const l = console.log.bind(console)
+const l = // console.log.bind(console)
 var urijs = require('urijs');
 let U = 'http://www.sodu.cc'
 let uri = new urijs(U)

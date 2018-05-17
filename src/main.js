@@ -13,7 +13,7 @@ localforage.config({
   name: "getNoAbsBooks"
 });
 
-console.log("main running ");
+// console.log("main running ");
 Vue.component(Range.name, Range);
 Vue.component(Popup.name, Popup);
 Vue.component(Spinner.name, Spinner);

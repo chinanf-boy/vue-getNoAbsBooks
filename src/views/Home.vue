@@ -67,13 +67,13 @@ export default {
   },
   created() {
     // 2
-    console.log("home created on");
+    // console.log("home created on");
 
     this.apiSelected = this.API[0];
 
     this.syncApi(this.API[0]);
 
-    console.log("home created off");
+    // console.log("home created off");
   },
   computed: {
     fullURL: {
@@ -84,11 +84,11 @@ export default {
           U.pathname(this.pathName);
         }
 
-        console.log("computed fullURL get", U.href()); // 3
+        // console.log("computed fullURL get", U.href()); // 3
         return U.href();
       },
       set: function(N) {
-        console.log("computed fullURL set", N);
+        // console.log("computed fullURL set", N);
         let U = new URI(N);
         this.apiSelected = U.origin();
 
@@ -109,7 +109,7 @@ export default {
     })
   },
   mounted() {
-    console.log("Home mounted on");
+    // console.log("Home mounted on");
 
     this.getBooks();
 
@@ -117,20 +117,20 @@ export default {
 
     this.$refs.In.focus();
 
-    console.log("Home mounted off");
+    // console.log("Home mounted off");
   },
   methods: {
     ...mapActions(["showErrMessage", "syncApi", "getAllBooks"]),
     setA(N) {
-      console.log("book.origin set ApiSelected ", N);
+      // console.log("book.origin set ApiSelected ", N);
       this.syncApi(N);
     },
     getBooks() {
-      console.log("Home methods getBooks on");
+      // console.log("Home methods getBooks on");
       this.getAllBooks().catch(err => {
-        console.log("getAllBooks ❌", err.message);
+        // console.log("getAllBooks ❌", err.message);
       });
-      console.log("Home methods getBooks off");
+      // console.log("Home methods getBooks off");
     },
     textInput() {
       if (!this.Input) {
@@ -150,13 +150,13 @@ export default {
       if (uRI.suffix()) {
         this.$store.commit("changeSuffix", uRI.suffix());
       }
-      console.log("method textInput route to ", uRI.pathname());
+      // console.log("method textInput route to ", uRI.pathname());
       this.$router.push({ path: `${uRI.pathname()}` });
     },
     getFull(Input) {
       let fullUrl = this.$store.getters.getFullUrl(Input);
 
-      console.log("method getFull", fullUrl);
+      // console.log("method getFull", fullUrl);
 
       return fullUrl;
     },
@@ -172,9 +172,9 @@ export default {
       }
     },
     changeInput(In) {
-      console.log("methods changeInput");
+      // console.log("methods changeInput");
       let fullUrl = this.getFull(In);
-      console.log("methods changeInput getURL");
+      // console.log("methods changeInput getURL");
       if (!In) {
         fullUrl = this.apiSelected;
       }
@@ -189,7 +189,7 @@ export default {
       this.$store.commit("setApiSelected", N);
     },
     Input: function(N) {
-      console.log("watch Input");
+      // console.log("watch Input");
       this.changeInput(N);
     }
   },

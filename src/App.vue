@@ -36,18 +36,18 @@ export default {
     };
   },
   created: function() {
-    console.log("app created on");
+    // console.log("app created on");
     // this.Init()
-    console.log("app created off");
+    // console.log("app created off");
   },
   mounted: function() {
-    console.log("app mounted on");
-    console.log("app mounted off");
+    // console.log("app mounted on");
+    // console.log("app mounted off");
   },
   methods: {
     Init() {
-      console.log("app method Init on");
-      console.log("app method Init off");
+      // console.log("app method Init on");
+      // console.log("app method Init off");
     }
   },
   computed: {

@@ -37,22 +37,22 @@ export default new Vuex.Store({
       state.isBlockLoading = bool;
     },
     setPendingLoad(state, str) {
-      console.log("mutations:setPendingLoad", str);
+      // console.log("mutations:setPendingLoad", str);
       if (state.pendingLoad != str) {
         state.pendingLoad = str;
       }
     },
     setErrMessage(state, err) {
-      console.log("mutations setErrMessage on");
+      // console.log("mutations setErrMessage on");
       state.errMessage = err;
-      console.log("mutations setErrMessage off");
+      // console.log("mutations setErrMessage off");
     },
     // Home
     setFullURL(state, str) {
       state.fullURL = str;
     },
     setApiSelected(state, str) {
-      console.log("mutations:setApiSelected", str);
+      // console.log("mutations:setApiSelected", str);
       state.apiSelected = str;
     },
     setHomeLoading(state, bool) {
@@ -90,13 +90,13 @@ export default new Vuex.Store({
           addS = "/";
         }
         Input = Input.trimStr("/"); // trim /
-        console.log("getter getFUll Input", Input);
+        // console.log("getter getFUll Input", Input);
 
         U.directory(state.directory);
         U.segment(Input);
         if (U.segment().length == 2) {
           // 4
-          // console.log('1', 4)
+          // // console.log('1', 4)
           if (addS && !U.href().endsWith("/")) {
             U.segment(addS);
             addS = "";
@@ -105,7 +105,7 @@ export default new Vuex.Store({
           }
           return U.href();
         }
-        // console.log(U.href())
+        // // console.log(U.href())
         // U.href()
         // 1. http://example.org/book/123234/baz.html => book details
         // 2. http://example.org/book/123234/  => book index
@@ -113,7 +113,7 @@ export default new Vuex.Store({
         // 4. http://example.org/book/123234 => book index
         // 5. http://example.org/book/123234/21342/2423443 => book details
 
-        console.log("getter getFUll", U.href());
+        // console.log("getter getFUll", U.href());
 
         U.pathname(Input);
 
@@ -157,13 +157,9 @@ export default new Vuex.Store({
 
         let N = function() {
           setTimeout(() => {
-            console.log(
-              "axiosWithCancel run run run",
-              state.fullURL,
-              postForm.url
-            );
+            // console.log("axiosWithCancel run run run",state.fullURL,postForm.url);
             if (state.fullURL !== postForm.url) {
-              console.log("Operation canceled 自己会说一次");
+              // console.log("Operation canceled 自己会说一次");
               source.cancel("Operation canceled by the user.");
               T = null;
             } else if (T) {
@@ -176,7 +172,7 @@ export default new Vuex.Store({
       });
     },
     initApiSelected: async function({ commit, state }) {
-      console.log("action initApiSelected on");
+      // console.log("action initApiSelected on");
 
       let api = await localforage.getItem("user-apiselected");
 
@@ -186,13 +182,13 @@ export default new Vuex.Store({
         commit("setApiSelected", state.Api[0]);
       }
 
-      console.log("action initApiSelected off");
+      // console.log("action initApiSelected off");
     },
     syncApi: async function({ commit }, a) {
-      console.log("action syncApi on", a);
+      // console.log("action syncApi on", a);
       commit("setApiSelected", a);
       localforage.setItem("user-apiselected", a);
-      console.log("action syncApi off", a);
+      // console.log("action syncApi off", a);
     },
     showErrMessage: async function({ commit, dispatch }, errMessage) {
       if (errMessage) {
@@ -220,13 +216,13 @@ export default new Vuex.Store({
     },
     // Home
     addJsonStore(state, url) {
-      console.log("adding jsonstore", url);
+      // console.log("adding jsonstore", url);
       return axios.post("/api/addJsonStore", { url }).then(res => {
-        console.log("add jsonstore", res.data.ok);
+        // console.log("add jsonstore", res.data.ok);
       });
     },
     getAllBooks: async function({ commit, dispatch }) {
-      console.log("actions getAllBooks on");
+      // console.log("actions getAllBooks on");
 
       commit("setHomeLoading", true);
 
@@ -242,22 +238,22 @@ export default new Vuex.Store({
         throw new Error(e);
       } finally {
         commit("setHomeLoading", false);
-        console.log("actions getAllBooks off");
+        // console.log("actions getAllBooks off");
       }
 
       return result;
     },
     // Index
     keepHTML: async function({ commit, state }, html) {
-      console.log("action keepHTML on", state.fullURL);
+      // console.log("action keepHTML on", state.fullURL);
       await localforage.setItem(`${state.fullURL}`, html);
       commit("setHtml", html);
-      console.log("action keepHTML off");
+      // console.log("action keepHTML off");
     },
     copyHTML: async function({ state }) {
-      console.log("action copyHTML on", state.fullURL);
+      // console.log("action copyHTML on", state.fullURL);
       let H = await localforage.getItem(`${state.fullURL}`);
-      console.log("action copyHTML off");
+      // console.log("action copyHTML off");
       return H;
     },
     getBookIndex: async function({ commit, state, dispatch }, path) {
@@ -275,22 +271,22 @@ export default new Vuex.Store({
 
       let url = new URI(path);
 
-      console.log("actions getBookIndex on", url.href());
+      // console.log("actions getBookIndex on", url.href());
 
       // set origin to ApiSelected on
       if (url.origin()) {
         // fullurl just no action
         dispatch("syncApi", url.origin());
-        console.log("getBookIndex syncApi set 👇");
+        // console.log("getBookIndex syncApi set 👇");
       }
 
       if (!state.apiSelected) {
-        console.log("getBookIndex syncApi set 👆");
+        // console.log("getBookIndex syncApi set 👆");
         await dispatch("initApiSelected");
       }
       // set origin to ApiSelected off
 
-      console.log("setFullURL before", state.fullURL);
+      // console.log("setFullURL before", state.fullURL);
 
       let newFullurl;
       if (url.origin()) {
@@ -300,7 +296,7 @@ export default new Vuex.Store({
       }
       commit("setFullURL", newFullurl.href()); // change fullURL
 
-      console.log("setFullURL after", state.fullURL);
+      // console.log("setFullURL after", state.fullURL);
 
       // get newFullurl
 
@@ -312,13 +308,13 @@ export default new Vuex.Store({
 
       url = newFullurl.href();
 
-      console.log("getBookIndex before", url);
+      // console.log("getBookIndex before", url);
 
       let notUserAction = true;
 
       try {
         if ((file || urlPathLen > 3) && (await localforage.getItem(`${url}`))) {
-          console.log("copyHTML", fileSuffix, urlPathLen, url);
+          // console.log("copyHTML", fileSuffix, urlPathLen, url);
           result = await dispatch("copyHTML");
         } else {
           commit("setHtml", "");
@@ -337,7 +333,7 @@ export default new Vuex.Store({
           result = R;
         }
 
-        console.log("getBookIndex after", result.data);
+        // console.log("getBookIndex after", result.data);
         await dispatch("keepHTML", result.data);
 
         return result;
@@ -354,7 +350,7 @@ export default new Vuex.Store({
           commit("setIndexLoading", false);
         }
 
-        console.log("actions getBookIndex off");
+        // console.log("actions getBookIndex off");
       }
     }
   }

@@ -19,5 +19,5 @@ app.use(logger());
 
 // Start server
 app.listen(PORT);
-console.log("* vue project in heroku %s", PORT);
-console.log("* Output directory: %s", ROOT_DIR);
+// console.log("* vue project in heroku %s", PORT);
+// console.log("* Output directory: %s", ROOT_DIR);

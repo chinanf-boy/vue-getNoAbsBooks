@@ -84,55 +84,51 @@ export default {
     })
   },
   mounted() {
-    console.log("Index mounted on");
+    // console.log("Index mounted on");
     this.getFontSize();
     this.getPath();
-    console.log("Index mounted off");
+    // console.log("Index mounted off");
   },
   created() {
     this.$store.commit("setHtml", ""); // Fix ole muen
     /* eslint-disable */
     this.$router.afterEach((to, from) => {
-      console.log("run router", to.path);
+      // console.log("run router", to.path);
       this.setIndexLoading(true); // we must show the user, app running quickly
       this.setBlockLoading(false);
       // need to get time
-      console.log("Index methods getPath 2222");
+      // console.log("Index methods getPath 2222");
 
       this.getPath();
 
       // this.path = to.path; // 给 watch 启动启动
-      console.log("run router set", this.fontSize, this.setFont);
+      // console.log("run router set", this.fontSize, this.setFont);
     });
   },
   methods: {
     ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading"]),
     ...mapActions(["showErrMessage", "getBookIndex"]),
     getPath() {
-      console.log("Index methods getPath on");
+      // console.log("Index methods getPath on");
       this.path = this.$route.path;
-      console.log("Index methods getPath off");
+      // console.log("Index methods getPath off");
     },
     addLoad(ing) {
-      console.log("Index methods addLoad on");
+      // console.log("Index methods addLoad on");
 
       this.setPendingLoad(ing);
 
       this.getBookPage();
-      console.log("Index methods addLoad off");
+      // console.log("Index methods addLoad off");
     },
     getBookPage: debounce(
       function() {
-        console.log(
-          "Index methods getBookPage on",
-          this.apiSelected,
-          this.path
-        );
-        console.log("Index watch path on 1111");
+        // console.log("Index methods getBookPage on", this.apiSelected, this.path);
+        // console.log("Index watch path on 1111");
 
         this.getBookIndex(this.path)
           .then(res => {
-            console.log(" Index getBookPage result =>", res);
+            // console.log(" Index getBookPage result =>", res);
             let T = 0;
             waitChapter();
             function waitChapter() {
@@ -146,13 +142,9 @@ export default {
                 ul.forEach(x => {
                   x.style.display = "";
                 });
-                console.log("getBookPage HTML ✅", ul1);
+                // console.log("getBookPage HTML ✅", ul1);
               } else {
-                console.log(
-                  `getBookPage HTML put the document
-              is no sync,there have time less
-              in phone ` + T
-                );
+                // console.log(`getBookPage HTML put the document is no sync,there have time less in phone ` + T);
 
                 if (T < 3) {
                   T++;
@@ -164,13 +156,9 @@ export default {
             }
           })
           .catch(err => {
-            console.log("getBookPage ❌", err);
+            // console.log("getBookPage ❌", err);
           });
-        console.log(
-          "Index methods getBookPage off",
-          this.apiSelected,
-          this.path
-        );
+        // console.log("Index methods getBookPage off",this.apiSelected,this.path);
       },
       100,
       {
@@ -183,22 +171,18 @@ export default {
         +window.getComputedStyle(document.body)["font-size"].replace("px", "");
     },
     async setFont(val) {
-      console.log("setFont", val, document.querySelector("body")); // every time refs
+      // console.log("setFont", val, document.querySelector("body")); // every time refs
 
       document.querySelector("body").style.fontSize = val + "px";
       await localforage.setItem("user-fontsize", val);
-      console.log(
-        "setFont localforage",
-        await localforage.getItem("user-fontsize")
-      );
       // every time refs
     }
   },
   watch: {
     path: function(N) {
-      console.log("Index watch path on");
+      // console.log("Index watch path on");
       this.addLoad(N);
-      console.log("Index watch path off");
+      // console.log("Index watch path off");
     },
     fontSize: function(n) {
       this.setFont(n);
