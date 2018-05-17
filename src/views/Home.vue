@@ -67,8 +67,8 @@ export default {
   },
   created() {
     // 2
-    // console.log("home created on");
-
+    // console.log("home created on",this.$route.path);
+    this.$store.commit("setPendingLoad",this.$route.path)
     this.apiSelected = this.API[0];
 
     this.syncApi(this.API[0]);

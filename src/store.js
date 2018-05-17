@@ -141,6 +141,8 @@ export default new Vuex.Store({
       };
       return new Promise((ok, bad) => {
         let T = 1;
+        let thisTimePending = state.pendingLoad
+
         axios[method](path, postForm, options)
           .then(res => {
             T = null;
@@ -157,15 +159,15 @@ export default new Vuex.Store({
 
         let N = function() {
           setTimeout(() => {
-            // console.log("axiosWithCancel run run run",state.fullURL,postForm.url);
-            if (state.fullURL !== postForm.url) {
+            // console.log("axiosWithCancel run run run",state.pendingLoad,postForm.url);
+            if (state.pendingLoad !== thisTimePending) {
               // console.log("Operation canceled 自己会说一次");
               source.cancel("Operation canceled by the user.");
               T = null;
             } else if (T) {
               N();
             }
-          }, 33);
+          }, 66);
         };
 
         N();
@@ -323,7 +325,6 @@ export default new Vuex.Store({
             path: "/api/getNoAbsBooks",
             postForm: { url }
           });
-          // result = await axios.post('/api/getNoAbsBooks',{url})
         }
 
         if (result && !result.data) {
