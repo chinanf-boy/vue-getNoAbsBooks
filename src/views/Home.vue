@@ -113,7 +113,7 @@ export default {
 
     this.getBooks();
 
-    this.changeInput();
+    this.changeInput(this.Input);
 
     this.$refs.In.focus();
 
