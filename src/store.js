@@ -5,6 +5,7 @@ import URI from "urijs";
 require("@/util");
 Vue.use(Vuex);
 
+import { Indicator } from 'mint-ui';
 import localforage from "localforage";
 
 export default new Vuex.Store({
@@ -141,7 +142,7 @@ export default new Vuex.Store({
       };
       return new Promise((ok, bad) => {
         let T = 1;
-        let thisTimePending = state.pendingLoad
+        let thisTimePending = state.pendingLoad;
 
         axios[method](path, postForm, options)
           .then(res => {
@@ -192,36 +193,41 @@ export default new Vuex.Store({
       localforage.setItem("user-apiselected", a);
       // console.log("action syncApi off", a);
     },
-    showErrMessage: async function({ commit, dispatch }, errMessage) {
+    showErrMessage: function({ commit }, errMessage) {
       if (errMessage) {
         commit("setBlockLoading", true);
 
         commit("setErrMessage", errMessage);
 
-        dispatch("waitTime", 1000);
+        setTimeout(function(){
 
-        commit("setBlockLoading", false);
+          commit("setBlockLoading", false);
 
-        commit("setErrMessage", "");
+          commit("setErrMessage", "");
+
+        },1300)
 
         commit("setMessageForUser", errMessage);
       }
     },
-    waitTime: async function(time) {
-      await new Promise((ok, bad) => {
-        try {
-          setTimeout(ok, time);
-        } catch (e) {
-          bad(e);
-        }
-      });
-    },
     // Home
-    addJsonStore(state, url) {
+    addJsonStore:async function({dispatch}, url) {
       // console.log("adding jsonstore", url);
-      return axios.post("/api/addJsonStore", { url }).then(res => {
-        // console.log("add jsonstore", res.data.ok);
-      });
+      try{
+
+        Indicator.open("正在加入书单")
+        let res =  await axios.post("/api/addJsonStore", { url })
+        return res
+
+      }catch(e){
+        // console.log('addJsonStore error')
+        dispatch("showErrMessage", "无法被加入书单\n"+e);
+        throw new Error(e);  
+              
+      }finally{
+        Indicator.close()
+      }
+
     },
     getAllBooks: async function({ commit, dispatch }) {
       // console.log("actions getAllBooks on");
@@ -236,7 +242,7 @@ export default new Vuex.Store({
           commit("addBooks", res.data.result);
         });
       } catch (e) {
-        await dispatch("showErrMessage", e.message);
+        dispatch("showErrMessage", e.message);
         throw new Error(e);
       } finally {
         commit("setHomeLoading", false);
@@ -343,7 +349,10 @@ export default new Vuex.Store({
 
         notUserAction = !!e.message;
 
-        dispatch("showErrMessage", e.message || e);
+        if(notUserAction){
+          dispatch("showErrMessage", e.message);
+        }
+
         // Fix: Error html nothing
         throw new Error(e);
       } finally {

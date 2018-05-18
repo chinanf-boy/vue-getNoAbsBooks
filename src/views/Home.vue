@@ -68,7 +68,7 @@ export default {
   created() {
     // 2
     // console.log("home created on",this.$route.path);
-    this.$store.commit("setPendingLoad",this.$route.path)
+    this.$store.commit("setPendingLoad", this.$route.path);
     this.apiSelected = this.API[0];
 
     this.syncApi(this.API[0]);
@@ -140,10 +140,8 @@ export default {
 
       let fullUrl = this.fullURL;
       this.$store.commit("setFullURL", this.fullURL);
-      this.addJsonStore(fullUrl).catch(err => {
-        // error message show
-        this.showErrMessage(err);
-      });
+
+      this.addJsonStore(fullUrl).then(ok =>{
 
       let uRI = new URI(fullUrl);
 
@@ -152,6 +150,8 @@ export default {
       }
       // console.log("method textInput route to ", uRI.pathname());
       this.$router.push({ path: `${uRI.pathname()}` });
+      
+      })
     },
     getFull(Input) {
       let fullUrl = this.$store.getters.getFullUrl(Input);

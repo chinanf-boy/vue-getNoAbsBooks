@@ -6,7 +6,7 @@ import store from "./store";
 import axios from "./http";
 import App from "./App.vue";
 import router from "./router";
-import { Range, Popup, Spinner } from "mint-ui";
+import { Range, Popup, Spinner,Indicator } from "mint-ui";
 import "mint-ui/lib/style.css";
 
 localforage.config({
