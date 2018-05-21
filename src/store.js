@@ -101,7 +101,7 @@ export default new Vuex.Store({
           if (addS && !U.href().endsWith("/")) {
             U.segment(addS);
             addS = "";
-          } else if (!U.suffix()) {
+          } else if (!U.suffix() && U.filename()) {
             U.suffix(state.suffix);
           }
           return U.href();
@@ -121,7 +121,7 @@ export default new Vuex.Store({
         if (addS && !U.href().endsWith("/")) {
           U.segment(addS);
           addS = "";
-        } else if (!U.suffix()) {
+        } else if (!U.suffix() && U.filename()) {
           U.suffix(state.suffix);
         }
 
