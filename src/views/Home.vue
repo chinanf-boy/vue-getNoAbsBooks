@@ -65,6 +65,11 @@ export default {
       pathName: ""
     };
   },
+  metaInfo(){
+    return {
+      title: this.title
+    }
+  },
   created() {
     // 2
     // console.log("home created on",this.$route.path);
@@ -103,7 +108,9 @@ export default {
       books: state => state.books,
       isLoading: state => state.isHomeLoading,
       API: state => state.Api,
-      messageForUser: state => state.messageForUser
+      messageForUser: state => state.messageForUser,
+      title: state => state.title
+      
     })
   },
   mounted() {

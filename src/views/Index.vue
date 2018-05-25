@@ -73,6 +73,11 @@ export default {
       fontSize: null
     };
   },
+  metaInfo(){
+    return {
+      title: this.title
+    }
+  },
   computed: {
     ...mapState({
       errMessage: state => state.errMessage,
@@ -80,7 +85,8 @@ export default {
       apiSelected: state => state.apiSelected,
       HTML: state => state.HTML,
       isLoading: state => state.isIndexLoading,
-      messageForUser: state => state.messageForUser
+      messageForUser: state => state.messageForUser,
+      title: state => state.title
     })
   },
   mounted() {
@@ -106,7 +112,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading"]),
+    ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading", "setTitle"]),
     ...mapActions(["showErrMessage", "getBookIndex"]),
     getPath() {
       // console.log("Index methods getPath on");
@@ -125,13 +131,25 @@ export default {
       function() {
         // console.log("Index methods getBookPage on", this.apiSelected, this.path);
         // console.log("Index watch path on 1111");
-
         this.getBookIndex(this.path)
           .then(res => {
             // console.log(" Index getBookPage result =>", res);
             let T = 0;
-            waitChapter();
+            waitChapter = waitChapter.bind(this);
+            waitChapter()
             function waitChapter() {
+              if(document.querySelector('.book h1')){  
+                // Add document.title
+                let bname = document.querySelector('.book h1')
+                let bchapter = document.getElementById("nr_title")
+
+                if(bname && bchapter){
+                  this.setTitle(bname.textContent +' > '+bchapter.textContent)
+                }else if(bname){
+                  this.setTitle(bname.textContent)
+                }
+              }
+
               if (document.getElementsByClassName("chapter").length > 0) {
                 // in phone HTML != document is no sync， there have time less
 
@@ -153,7 +171,10 @@ export default {
                   // throw new Error("o see like error HTML")
                 }
               }
+
+
             }
+
           })
           .catch(err => {
             // console.log("getBookPage ❌", err);
@@ -177,6 +198,9 @@ export default {
       await localforage.setItem("user-fontsize", val);
       // every time refs
     }
+  },
+  beforeDestroy(){
+    this.setTitle("无广告的书-yobrave")
   },
   watch: {
     path: function(N) {

@@ -24,6 +24,7 @@ export default new Vuex.Store({
 
     // Index
     HTML: "",
+    title: "无广告的书-yobrave",
     isIndexLoading: false,
     messageForUser: "",
     // status
@@ -73,6 +74,9 @@ export default new Vuex.Store({
     // Index
     setHtml(state, h) {
       state.HTML = h;
+    },
+    setTitle(state, t) {
+      state.title = t;
     },
     setIndexLoading(state, bool) {
       state.isIndexLoading = bool;

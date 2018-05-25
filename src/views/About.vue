@@ -14,7 +14,12 @@ export default {
     return {
       go: ">>"
     };
-  }
+  },
+  metaInfo(){
+    return {
+      title: " 关于 chinanf-boy @ yobrave"
+    }
+  },
 };
 </script>
 
