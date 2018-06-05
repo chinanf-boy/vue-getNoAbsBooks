@@ -14,12 +14,17 @@
       </div>
     </div>
 
-      <div class="book">
+      <div class="book" id="book-top">
         <div class="cover_BOOK" ref="getHtml" >
 
           <div v-html="HTML">
-
           </div>
+          
+          <div v-if="HTML" class="up-top">       
+              <a href="#book-top">Up top</a>
+          </div>
+          
+
         </div>
       </div>
     
@@ -221,5 +226,14 @@ export default {
 }
 .cover_BOOK {
   margin: auto 1rem auto 1rem;
+}
+.up-top {
+    margin: 1rem;
+    border-radius: 20%;
+    border: #544444 2px solid;
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
+    background-color: gold;
+    
 }
 </style>
