@@ -95,6 +95,9 @@ export default new Vuex.Store({
   },
   getters: {
     //
+    getBookNameList(state){
+      return state.books.map(book =>decodeURI(book.name))
+    },
     getFullUrl(state) {
       return Input => {
         let U = new URI(state.apiSelected);
@@ -233,6 +236,32 @@ export default new Vuex.Store({
         dispatch("showErrMessage", "无法被加入书单\n"+e);
         throw new Error(e);  
               
+      }finally{
+        Indicator.close()
+      }
+
+    },
+    delJsonStore: async function({dispatch},delBooks) {
+      try{
+        // console.log('delJsonStore start',delBooks)
+        Indicator.open("正在删除")
+        
+        let pwd = delBooks.pwd
+        let delBookList  = delBooks.delBookList
+        let res
+        if(delBookList.length){
+          for(let bname of delBookList){
+            let name = encodeURI(bname);
+            Indicator.open(`正在删除-${bname}`)
+            res = await axios.post("/api/deleteJsonStore", { name, pwd })
+          };
+        }
+
+        Indicator.open(`删除-完成✅`)
+        // console.log('delJsonStore end')        
+      }catch(err){
+        dispatch("showErrMessage", "无法删除书单\n"+err.message);
+        // throw new Error(err);  
       }finally{
         Indicator.close()
       }

@@ -171,6 +171,7 @@ body {
 
 ul {
   padding-left: 0;
+  margin-bottom: 0;
 }
 
 li {

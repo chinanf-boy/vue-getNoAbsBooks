@@ -25,8 +25,8 @@
       Books
     </div>
     <!-- b         oo         k      s -->
-    <ul>
-    <li  class="book-list" v-for="book in books" :key="book.time">
+    <ul v-if="!del">
+    <li  class="book-list" v-for="book in books" :key="book.name">
       <!-- <span style="background-color:#c9e4c6;width:100%"  v-if="book.origin">  -->
 
         <router-link :to="{ path: book.routeLink } " tag="span" class="book_link" > 
@@ -39,8 +39,16 @@
         </router-link>
         <!-- <span v-if="decodeURI(book.name)">   书名:   }</span> -->
         <br />
-    </li>
+    </li>    
     </ul>
+
+<!-- del list -->
+    <mt-checklist v-if="del" title="删除列表" align="right"
+      v-model="delBookList"
+      :options="getBookNameList()">
+
+    </mt-checklist>
+
     <div v-if="isLoading" class="loading" >
       <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
       </mt-spinner>
@@ -52,12 +60,23 @@
 
 
     <div v-else-if="books.length == 0">no book , please start your own books trip</div>
+
+    <mt-switch  v-else  v-model="del" style="color:red;">删除</mt-switch>
+<!-- del handle -->
+    <div v-if="del">
+      <br>
+      <input type="text" class="pwd" placeholder="必须要密码" v-model="pwd">
+      <button @click="delBooks">
+        删除Go
+      </button>
+    </div>
+    
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapGetters } from "vuex";
 import HelloWorld from "@/components/HelloWorld.vue";
 import URI from "urijs";
 
@@ -67,19 +86,22 @@ export default {
     return {
       Input: "2222/",
       apiSelected: "",
-      pathName: ""
+      pathName: "",
+      pwd: "",
+      del: false,
+      delBookList: []
     };
   },
-  metaInfo(){
+  metaInfo() {
     return {
       title: this.title
-    }
+    };
   },
   created() {
     // 2
     // console.log("home created on",this.$route.path);
     this.$store.commit("setPendingLoad", this.$route.path);
-    this.apiSelected = this.$store.state.apiSelected  || this.API[0];
+    this.apiSelected = this.$store.state.apiSelected || this.API[0];
 
     // console.log("home created off");
   },
@@ -115,7 +137,6 @@ export default {
       API: state => state.Api,
       messageForUser: state => state.messageForUser,
       title: state => state.title
-      
     })
   },
   mounted() {
@@ -130,14 +151,15 @@ export default {
     // console.log("Home mounted off");
   },
   methods: {
-    ...mapActions(["showErrMessage", "syncApi", "getAllBooks"]),
+    ...mapActions(["showErrMessage", "syncApi", "getAllBooks", "delJsonStore"]),
+    ...mapGetters(["getBookNameList"]),
     setA(N) {
       // console.log("book.origin set ApiSelected ", N);
       this.syncApi(N);
     },
     getBooks() {
       // console.log("Home methods getBooks on");
-      this.getAllBooks().catch(err => {
+      this.getAllBooks().catch(() => {
         // console.log("getAllBooks ❌", err.message);
       });
       // console.log("Home methods getBooks off");
@@ -151,17 +173,15 @@ export default {
       let fullUrl = this.fullURL;
       this.$store.commit("setFullURL", this.fullURL);
 
-      this.addJsonStore(fullUrl).then(ok =>{
+      this.addJsonStore(fullUrl).then(() => {
+        let uRI = new URI(fullUrl);
 
-      let uRI = new URI(fullUrl);
-
-      if (uRI.suffix()) {
-        this.$store.commit("changeSuffix", uRI.suffix());
-      }
-      // console.log("method textInput route to ", uRI.pathname());
-      this.$router.push({ path: `${uRI.pathname()}` });
-      
-      })
+        if (uRI.suffix()) {
+          this.$store.commit("changeSuffix", uRI.suffix());
+        }
+        // console.log("method textInput route to ", uRI.pathname());
+        this.$router.push({ path: `${uRI.pathname()}` });
+      });
     },
     getFull(Input) {
       let fullUrl = this.$store.getters.getFullUrl(Input);
@@ -192,6 +212,11 @@ export default {
       let F = new URI(fullUrl);
 
       this.pathName = F.pathname();
+    },
+    delBooks(){
+      let pwd = this.pwd
+      let delBookList = this.delBookList
+      this.delJsonStore({pwd,delBookList})
     }
   },
   watch: {
@@ -259,8 +284,13 @@ select {
   transition-property: all;
   transition-duration: 0.3s;
 }
+.pwd {
+  width: 50%;
+  height: 1.4rem;
+  font-size: 1.2rem;
+}
 input {
   width: 80%;
-  font-size:1rem;
+  font-size: 1rem;
 }
 </style>
