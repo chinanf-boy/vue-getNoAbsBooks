@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <div class="container" id="container">
+    <!-- fontsize -->
     <div v-if="HTML">
       <div v-if="fontSize">
       字体大小 {{ fontSize }}
@@ -13,6 +14,24 @@
       </mt-range>
       </div>
       </div>
+                <!-- auto read -->
+      <div v-if="HTML">
+        <mt-switch v-model="auto">自动阅读</mt-switch>
+            <div v-if="auto">
+              <button @click="startAuto(false)">GO</button>
+
+              阅读速度 {{ autoSpeed }}
+              <br>
+              <mt-range
+              v-model="autoSpeed"
+              :min="10"
+              :max="60"
+              :step="5"
+              :bar-height="5">
+              </mt-range>
+              <br>
+            </div>
+      </div>
       
       <div class="book" id="book-top">
         <div class="cover_BOOK" ref="getHtml" >
@@ -20,25 +39,9 @@
           <div v-html="HTML">
           </div>
           
-          <div v-if="HTML" class="up-top">       
-              <a href="#book-top">Up top</a>
+          <div v-if="HTML" class="up-top" id="bottom">       
+              <a href="#container" id="up-top">Up top</a>
           </div>
-          <!-- auto read -->
-        <div v-if="HTML">
-          <mt-switch v-model="auto">自动阅读</mt-switch>
-              <div v-if="auto">
-                阅读速度 {{ autoSpeed }}
-                <br>
-                <mt-range
-                v-model="autoSpeed"
-                :min="5"
-                :max="20"
-                :step="1.5"
-                :bar-height="5">
-                </mt-range>
-                <br>
-              </div>
-        </div>
 
 
         </div>
@@ -94,7 +97,7 @@ export default {
       fontSize: null,
       auto: false,
       autoSpeed: 10    
-      
+
     };
   },
   metaInfo(){
@@ -120,13 +123,14 @@ export default {
   mounted() {
     // console.log("Index mounted on");
     this.getFontSize();
+    this.getAutoSpeed()    
     this.getPath();
-    if(this.autoRead){
-      this.getAutoSpeed()
-    }
+
     // console.log("Index mounted off");
   },
   created() {
+    this.$store.commit("setAutoRead", false);
+     // Fix once autoRead
     this.$store.commit("setHtml", ""); // Fix ole muen
     /* eslint-disable */
     this.$router.afterEach((to, from) => {
@@ -167,9 +171,10 @@ export default {
             // console.log(" Index getBookPage result =>", res);
             let T = 0;
             waitChapter = waitChapter.bind(this);
-            waitChapter()
-            function waitChapter() {
-              if(document.querySelector('.book h1')){  
+            waitChapter(false)
+            function waitChapter(okHTML) {
+              if(document.querySelector('.book h1') && !okHTML){  
+                
                 // Add document.title
                 let bname = document.querySelector('.book h1')
                 let bchapter = document.getElementById("nr_title")
@@ -179,6 +184,18 @@ export default {
                 }else if(bname){
                   this.setTitle(bname.textContent)
                 }
+                
+                if(this.auto && this.autoCancel){
+                  // console.log('time')
+                  this.autoCancel()
+                  this.startAuto()
+
+                }else{
+                  // console.log('false',this.auto,this.autoCancel)
+                  
+                }
+
+                okHTML = true
               }
 
               if (document.getElementsByClassName("chapter").length > 0) {
@@ -197,7 +214,7 @@ export default {
 
                 if (T < 3) {
                   T++;
-                  setTimeout(waitChapter, 1);
+                  setTimeout(function(){waitChapter(okHTML)}, 1);
                 } else {
                   // throw new Error("o see like error HTML")
                 }
@@ -235,6 +252,29 @@ export default {
     setAutoSpeed(val) {
       localforage.setItem("user-autoSpeed", val);
     },
+    startAuto(once = true){
+      // start auto read
+      once && document.getElementById("up-top").click()
+
+      const options = {
+          container: 'body',
+          easing: 'linear',
+          offset: -60,
+          cancelable: true,
+          onDone: this.autoDone,
+          x: false,
+          y: true
+      }
+
+      this.autoCancel = this.$scrollTo("#bottom",this.speedMs,options)
+    },
+    autoDone(e){
+      // go next page
+      setTimeout(()=>{
+        document.getElementById('pb_next').click()
+      },this.speedMs / 7)
+    }
+
   },
   beforeDestroy(){
     this.setTitle("无广告的书-yobrave")

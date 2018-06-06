@@ -2,6 +2,10 @@ import Vue from "vue";
 
 import localforage from "localforage";
 
+import VueScrollTo from "vue-scrollto";
+ 
+Vue.use(VueScrollTo)
+
 import store from "./store";
 import axios from "./http";
 import App from "./App.vue";
