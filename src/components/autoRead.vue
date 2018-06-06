@@ -5,10 +5,10 @@
             <div v-if="auto">
               <button @click="startAuto(false)">GO</button>
 
-              阅读速度 {{ autoSpeed }}
+              阅读时间 {{ autoTime }}
               <br>
               <mt-range
-              v-model="autoSpeed"
+              v-model="autoTime"
               :min="10"
               :max="60"
               :step="5"
@@ -32,20 +32,20 @@ export default {
   data: function() {
     return {
       auto: false,
-      autoSpeed: 10
+      autoTime: 10
     }
   },
   mounted(){
-    this.getAutoSpeed()
+    this.getAutoTime()
   },
   methods: {
-    ...mapMutations(["setAutoRead","setAutoSpeeder"]),
-    setAutoSpeed(val) {
-      this.setAutoSpeeder(val)
-      localforage.setItem("user-autoSpeed", val);
+    ...mapMutations(["setAutoRead","setAutoTimer"]),
+    setAutoTime(val) {
+      this.setAutoTimer(val)
+      localforage.setItem("user-autoTime", val);
     },
-    async getAutoSpeed() {
-      this.autoSpeed = (await localforage.getItem("user-autoSpeed")) || this.autoSpeed
+    async getAutoTime() {
+      this.autoTime = (await localforage.getItem("user-autoTime")) || this.autoTime
     },
   },
   computed: {
@@ -57,8 +57,8 @@ export default {
     auto: function(n) {
       this.setAutoRead(n);
     },
-    autoSpeed: function(n) {
-      this.setAutoSpeed(n);
+    autoTime: function(n) {
+      this.setAutoTime(n);
     }
   }
 };

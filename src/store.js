@@ -28,7 +28,7 @@ export default new Vuex.Store({
     isIndexLoading: false,
     messageForUser: "",
     autoRead: false,
-    autoSpeed: 10,
+    autoTime: 10,
     // status
     isHomeLoading: false
   },
@@ -83,8 +83,8 @@ export default new Vuex.Store({
     setAutoRead(state, r) {
       state.autoRead = r;
     },
-    setAutoSpeeder(state, s) {
-      state.autoSpeed = s;
+    setAutoTimer(state, t) {
+      state.autoTime = t;
     },
     setIndexLoading(state, bool) {
       state.isIndexLoading = bool;

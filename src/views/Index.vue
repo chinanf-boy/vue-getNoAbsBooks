@@ -88,10 +88,10 @@ export default {
       messageForUser: state => state.messageForUser,
       title: state => state.title,
       autoRead: state => state.autoRead,
-      autoSpeed: state => state.autoSpeed
+      autoTime: state => state.autoTime
     }),
     speedMs: function() {
-      return +this.autoSpeed * 1000;
+      return +this.autoTime * 1000;
     }
   },
   mounted() {
