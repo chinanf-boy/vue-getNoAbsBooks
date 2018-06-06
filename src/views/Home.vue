@@ -8,6 +8,11 @@
       <option disabled selected >{{ apiSelected }}</option>
       <option  v-for="site in API" :key="site" >{{ site }}</option>
     </select>
+    <span v-if="apiSelected">
+      <a :href="apiSelected" target="_blank">
+        <button>进入看看</button>
+      </a>
+    </span>
     <br>
     <br>
     
