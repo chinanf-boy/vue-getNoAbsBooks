@@ -6,7 +6,7 @@ import store from "./store";
 import axios from "./http";
 import App from "./App.vue";
 import router from "./router";
-import { Range, Popup, Spinner,Indicator } from "mint-ui";
+import { Range, Popup, Spinner, Switch } from "mint-ui";
 import "mint-ui/lib/style.css";
 
 localforage.config({
@@ -17,6 +17,7 @@ localforage.config({
 Vue.component(Range.name, Range);
 Vue.component(Popup.name, Popup);
 Vue.component(Spinner.name, Spinner);
+Vue.component(Switch.name, Switch);
 
 Vue.config.productionTip = false;
 

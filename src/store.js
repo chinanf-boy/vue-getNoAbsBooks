@@ -27,6 +27,7 @@ export default new Vuex.Store({
     title: "无广告的书-yobrave",
     isIndexLoading: false,
     messageForUser: "",
+    autoRead: false,
     // status
     isHomeLoading: false
   },
@@ -77,6 +78,9 @@ export default new Vuex.Store({
     },
     setTitle(state, t) {
       state.title = t;
+    },
+    setAutoRead(state, r) {
+      state.autoRead = r;
     },
     setIndexLoading(state, bool) {
       state.isIndexLoading = bool;
@@ -135,10 +139,7 @@ export default new Vuex.Store({
   },
   actions: {
     // App
-    axiosWithCancel: async function(
-      { state },
-      { method, path, postForm, options }
-    ) {
+    axiosWithCancel: async function({ state },{ method, path, postForm, options }) {
       const CancelToken = axios.CancelToken;
       const source = CancelToken.source();
       options = {
