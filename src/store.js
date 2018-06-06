@@ -258,6 +258,7 @@ export default new Vuex.Store({
         }
 
         Indicator.open(`删除-完成✅`)
+        return res
         // console.log('delJsonStore end')        
       }catch(err){
         dispatch("showErrMessage", "无法删除书单\n"+err.message);

@@ -16,7 +16,7 @@
     <br>
     <br>
     
-    <input ref="In" v-model="Input" type="text" placeholder="输入书网址编号">
+    <input ref="In" @keyup.13="textInput" v-model="Input" type="text" placeholder="输入书网址编号">
     <br>
     <button type="submit" @click="textInput">👉 书籍ID确定</button>
     <br>
@@ -26,7 +26,7 @@
     </div>
     <!-- b         oo         k      s -->
     <ul v-if="!del">
-    <li  class="book-list" v-for="book in books" :key="book.name">
+    <li v-if="hideDelBook(book.name)"  class="book-list" v-for="book in books" :key="book.name">
       <!-- <span style="background-color:#c9e4c6;width:100%"  v-if="book.origin">  -->
 
         <router-link :to="{ path: book.routeLink } " tag="span" class="book_link" > 
@@ -65,7 +65,7 @@
 <!-- del handle -->
     <div v-if="del">
       <br>
-      <input type="text" class="pwd" placeholder="必须要密码" v-model="pwd">
+      <input @keyup.13="delBooks" type="text" class="pwd" placeholder="必须要密码" v-model="pwd">
       <button @click="delBooks">
         删除Go
       </button>
@@ -89,7 +89,8 @@ export default {
       pathName: "",
       pwd: "",
       del: false,
-      delBookList: []
+      delBookList: [],
+      delOK: false
     };
   },
   metaInfo() {
@@ -153,6 +154,16 @@ export default {
   methods: {
     ...mapActions(["showErrMessage", "syncApi", "getAllBooks", "delJsonStore"]),
     ...mapGetters(["getBookNameList"]),
+    hideDelBook(name) {
+      if (this.delOK) {
+        let Del = this.delBookList.some(b => {
+          return encodeURI(b) == name;
+        });
+        console.log(name,Del)
+        return !Del;
+      }
+      return true;
+    },
     setA(N) {
       // console.log("book.origin set ApiSelected ", N);
       this.syncApi(N);
@@ -213,10 +224,15 @@ export default {
 
       this.pathName = F.pathname();
     },
-    delBooks(){
-      let pwd = this.pwd
-      let delBookList = this.delBookList
-      this.delJsonStore({pwd,delBookList})
+    delBooks() {
+      let pwd = this.pwd;
+      let delBookList = this.delBookList;
+      this.delJsonStore({ pwd, delBookList }).then(ok => {
+        if (ok) {
+          this.delOK = true;
+          this.del = false;
+        }
+      });
     }
   },
   watch: {
