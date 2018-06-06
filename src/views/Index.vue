@@ -1,21 +1,10 @@
 <template>
   <div class="container" id="container">
     <!-- fontsize -->
-    <div v-if="HTML">
-      <div v-if="fontSize">
-      字体大小 {{ fontSize }}
-      <br>
-      <mt-range
-      v-model="fontSize"
-      :min="13"
-      :max="25"
-      :step="1"
-      :bar-height="5">
-      </mt-range>
-      </div>
-      </div>
-                <!-- auto read -->
-      <auto-reader :startAuto="startAuto"></auto-reader>
+    <font-size></font-size>
+      
+    <!-- auto read -->
+    <auto-reader :startAuto="startAuto"></auto-reader>
       
       <div class="book" id="book-top">
         <div class="cover_BOOK" ref="getHtml" >
@@ -26,11 +15,10 @@
           <div v-if="HTML" class="up-top" id="bottom">       
               <a href="#container" id="up-top">Up top</a>
           </div>
-
-
         </div>
       </div>
     
+  <!-- require info -->
    <div v-if="isLoading">
       请求 
       <br>  
@@ -45,7 +33,7 @@
       {{errMessage}}
     </div>
 
-          
+  <!-- error info -->
     <div v-else-if="HTML=='' && messageForUser"> 
       请求 失败
       <br>  
@@ -70,25 +58,25 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-import localforage from "localforage";
 import debounce from "lodash.debounce";
-import autoReader from '@/components/autoRead.vue'
+import autoReader from "@/components/autoRead.vue";
+import fontSize from "@/components/fontSize.vue";
 
 export default {
   name: "BookIndex",
-  components:{
-    autoReader
+  components: {
+    autoReader,
+    fontSize
   },
   data: function() {
     return {
-      path: "",
-      fontSize: null,
+      path: ""
     };
   },
-  metaInfo(){
+  metaInfo() {
     return {
       title: this.title
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -102,20 +90,19 @@ export default {
       autoRead: state => state.autoRead,
       autoSpeed: state => state.autoSpeed
     }),
-    speedMs:function(){
-      return +this.autoSpeed * 1000
+    speedMs: function() {
+      return +this.autoSpeed * 1000;
     }
   },
   mounted() {
     // console.log("Index mounted on");
-    this.getFontSize();
     this.getPath();
 
     // console.log("Index mounted off");
   },
   created() {
     this.$store.commit("setAutoRead", false);
-     // Fix once autoRead
+    // Fix once autoRead
     this.$store.commit("setHtml", ""); // Fix ole muen
     /* eslint-disable */
     this.$router.afterEach((to, from) => {
@@ -219,18 +206,6 @@ export default {
         trailing: true
       }
     ),
-    async getFontSize() {
-      this.fontSize =
-        (await localforage.getItem("user-fontsize")) ||
-        +window.getComputedStyle(document.body)["font-size"].replace("px", "");
-    },
-    setFont(val) {
-      // console.log("setFont", val, document.querySelector("body")); // every time refs
-
-      document.querySelector("body").style.fontSize = val + "px";
-      localforage.setItem("user-fontsize", val);
-      // every time refs
-    },
     startAuto(once = true){
       // start auto read
       once && document.getElementById("up-top").click()
@@ -250,7 +225,7 @@ export default {
     autoDone(e){
       // go next page
       setTimeout(()=>{
-        document.getElementById('pb_next').click()
+         document.getElementById('pb_next') && document.getElementById('pb_next').click()
       },this.speedMs / 7)
     }
 
@@ -263,9 +238,6 @@ export default {
       // console.log("Index watch path on");
       this.addLoad(N);
       // console.log("Index watch path off");
-    },
-    fontSize: function(n) {
-      this.setFont(n);
     }
   }
 };
