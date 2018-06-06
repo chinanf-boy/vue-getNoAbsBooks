@@ -211,7 +211,8 @@ export default {
 
 <style>
 select {
-  height: 1.5rem;
+  font-size: 1rem;
+  height: 2rem;
   border: 1px grey solid;
 }
 .books_span {
@@ -260,5 +261,6 @@ select {
 }
 input {
   width: 80%;
+  font-size:1rem;
 }
 </style>

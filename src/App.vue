@@ -223,7 +223,7 @@ button {
   text-align: center;
   line-height: 3rem;
   height: 3rem;
-  padding: 0 2rem;
+  padding: 0 1.8rem;
   display: inline-block;
   appearance: none;
   cursor: pointer;

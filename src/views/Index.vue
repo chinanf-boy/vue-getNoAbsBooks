@@ -13,7 +13,7 @@
           </div>
           
           <div v-if="HTML" class="up-top" id="bottom">       
-              <a href="#container" id="up-top">Up top</a>
+              <a href="#container" id="up-top" style="color:#038ef7;display:block;">Up top</a>
           </div>
         </div>
       </div>
