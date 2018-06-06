@@ -15,23 +15,7 @@
       </div>
       </div>
                 <!-- auto read -->
-      <div v-if="HTML">
-        <mt-switch v-model="auto">自动阅读</mt-switch>
-            <div v-if="auto">
-              <button @click="startAuto(false)">GO</button>
-
-              阅读速度 {{ autoSpeed }}
-              <br>
-              <mt-range
-              v-model="autoSpeed"
-              :min="10"
-              :max="60"
-              :step="5"
-              :bar-height="5">
-              </mt-range>
-              <br>
-            </div>
-      </div>
+      <auto-reader :startAuto="startAuto"></auto-reader>
       
       <div class="book" id="book-top">
         <div class="cover_BOOK" ref="getHtml" >
@@ -88,16 +72,17 @@
 import { mapState, mapActions, mapMutations } from "vuex";
 import localforage from "localforage";
 import debounce from "lodash.debounce";
+import autoReader from '@/components/autoRead.vue'
 
 export default {
   name: "BookIndex",
+  components:{
+    autoReader
+  },
   data: function() {
     return {
       path: "",
       fontSize: null,
-      auto: false,
-      autoSpeed: 10    
-
     };
   },
   metaInfo(){
@@ -114,7 +99,8 @@ export default {
       isLoading: state => state.isIndexLoading,
       messageForUser: state => state.messageForUser,
       title: state => state.title,
-      autoRead: state => state.autoRead
+      autoRead: state => state.autoRead,
+      autoSpeed: state => state.autoSpeed
     }),
     speedMs:function(){
       return +this.autoSpeed * 1000
@@ -123,7 +109,6 @@ export default {
   mounted() {
     // console.log("Index mounted on");
     this.getFontSize();
-    this.getAutoSpeed()    
     this.getPath();
 
     // console.log("Index mounted off");
@@ -147,7 +132,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading", "setTitle", "setAutoRead"]),
+    ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading", "setTitle"]),
     ...mapActions(["showErrMessage", "getBookIndex"]),
     getPath() {
       // console.log("Index methods getPath on");
@@ -185,7 +170,7 @@ export default {
                   this.setTitle(bname.textContent)
                 }
                 
-                if(this.auto && this.autoCancel){
+                if(this.autoRead && this.autoCancel){
                   // console.log('time')
                   this.autoCancel()
                   this.startAuto()
@@ -246,12 +231,6 @@ export default {
       localforage.setItem("user-fontsize", val);
       // every time refs
     },
-    async getAutoSpeed() {
-      this.autoSpeed = (await localforage.getItem("user-autoSpeed")) || this.autoSpeed
-    },
-    setAutoSpeed(val) {
-      localforage.setItem("user-autoSpeed", val);
-    },
     startAuto(once = true){
       // start auto read
       once && document.getElementById("up-top").click()
@@ -287,12 +266,6 @@ export default {
     },
     fontSize: function(n) {
       this.setFont(n);
-    },  
-    auto: function(n){
-      this.setAutoRead(n)
-    },
-    autoSpeed: function(n){
-      this.setAutoSpeed(n)
     }
   }
 };
