@@ -49,6 +49,8 @@
       <br> 
     <a style="color:red;" href="http://github.com/chinanf-boy/vue-getNoAbsBooks">
       👉 提交bug</a> 
+      <br>
+      <button @click="reFlash">刷新</button>
     </div>
     
  
@@ -230,6 +232,9 @@ export default {
       setTimeout(()=>{
          document.getElementById('pb_next') && document.getElementById('pb_next').click()
       },this.speedMs / 7)
+    },
+    reFlash(){
+      location.reload();
     }
 
   },
