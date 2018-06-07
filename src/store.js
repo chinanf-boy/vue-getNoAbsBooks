@@ -16,7 +16,7 @@ export default new Vuex.Store({
     pendingLoad: "",
     // Home
     books: [],
-    Api: ["http://m.76wx.com", "http://m.zwdu.com"],
+    Api: ["http://m.zwdu.com", "http://m.76wx.com"],
     apiSelected: "",
     suffix: "html",
     directory: "book",
