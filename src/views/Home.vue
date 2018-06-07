@@ -10,7 +10,7 @@
     </select>
     <span v-if="apiSelected">
       <a :href="apiSelected" target="_blank">
-        <button>进入看看</button>
+        <button>👈进入看看</button>
       </a>
     </span>
     <br>
@@ -29,7 +29,7 @@
     <li v-if="hideDelBook(book.name)"  class="book-list" v-for="book in books" :key="book.name">
       <!-- <span style="background-color:#c9e4c6;width:100%"  v-if="book.origin">  -->
 
-        <router-link :to="{ path: book.routeLink } " tag="span" class="book_link" > 
+        <router-link :to="{ path: book.url } " tag="span" class="book_link" > 
           <button  class="home_book" type="submit" @click="setA(book.origin)">
             <a class="book_click"> 
             {{decodeURI(book.name)}}  
@@ -159,14 +159,14 @@ export default {
         let Del = this.delBookList.some(b => {
           return encodeURI(b) == name;
         });
-        console.log(name,Del)
+        // console.log(name,Del)
         return !Del;
       }
       return true;
     },
-    setA(N) {
+    setA() {
       // console.log("book.origin set ApiSelected ", N);
-      this.syncApi(N);
+      // this.syncApi(N);
     },
     getBooks() {
       // console.log("Home methods getBooks on");
@@ -191,7 +191,7 @@ export default {
           this.$store.commit("changeSuffix", uRI.suffix());
         }
         // console.log("method textInput route to ", uRI.pathname());
-        this.$router.push({ path: `${uRI.pathname()}` });
+        this.$router.push({ path: `${uRI.href()}` });
       });
     },
     getFull(Input) {

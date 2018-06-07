@@ -22,9 +22,9 @@
    <div v-if="isLoading">
       请求 
       <br>  
-      {{apiSelected}}
+      source: {{apiSelected}}
       <br>
-      {{path}}
+      {{urlPath}}
         <mt-spinner type="triple-bounce" :size="60" color="#26a2ff">
         </mt-spinner>
     </div>
@@ -92,6 +92,9 @@ export default {
     }),
     speedMs: function() {
       return +this.autoTime * 1000;
+    },
+    urlPath: function() {
+      return this.path.slice(this.apiSelected.length + 1);
     }
   },
   mounted() {
