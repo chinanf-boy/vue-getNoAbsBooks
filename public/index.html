@@ -9,6 +9,32 @@
     <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
     <title>vue-getNoAbsBooks</title>
     <script>
+      var pageButton = function(event){
+				let href = window.location.href;
+				if(href.includes('/index_')){
+				let RmHrefIndex = href.lastIndexOf('/');
+				href = href.substring(0, RmHrefIndex);
+				}
+
+				if(href.endsWith('/')){
+					let RmHrefIndex = href.lastIndexOf('/');
+					href = href.substring(0,RmHrefIndex)
+				}
+				let source = event.href
+				if(source.includes('/index_')){
+					let RmHrefIndex = source.lastIndexOf('/');
+					source = source.substring(RmHrefIndex);
+				}
+        console.log('pages add',href,source)
+        if(source.startsWith('http')){
+          event.href = window.location.origin + '/#/' + source;
+        }else{
+          event.href= href + source
+        }
+
+				console.log('pages',event);
+				
+      };
       var SelectJs = function(event){
         var A = document.createElement('a');
         let href = window.location.href
