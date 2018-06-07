@@ -264,7 +264,9 @@ export default new Vuex.Store({
         dispatch("showErrMessage", "无法删除书单\n"+err.message);
         // throw new Error(err);  
       }finally{
-        Indicator.close()
+        setTimeout(() => {
+          Indicator.close()
+        }, 300);
       }
 
     },
