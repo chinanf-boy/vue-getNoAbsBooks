@@ -50,7 +50,9 @@
     <a style="color:red;" href="http://github.com/chinanf-boy/vue-getNoAbsBooks">
       👉 提交bug</a> 
       <br>
-      <button @click="reFlash">刷新</button>
+      <button v-if="reLoad" @click="reFlash">刷新</button>
+      <mt-spinner v-else type="triple-bounce" :size="60" color="#26a2ff">
+        </mt-spinner>
     </div>
     
  
@@ -72,7 +74,8 @@ export default {
   },
   data: function() {
     return {
-      path: ""
+      path: "",
+      reLoad: true
     };
   },
   metaInfo() {
@@ -234,6 +237,7 @@ export default {
       },this.speedMs / 7)
     },
     reFlash(){
+      this.reLoad = false
       location.reload();
     }
 
