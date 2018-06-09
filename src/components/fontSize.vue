@@ -10,6 +10,8 @@
       :max="25"
       :step="1"
       :bar-height="5">
+      <div slot="start">最小</div>
+  <div slot="end">最大</div>
       </mt-range>
       </div>
       </div>

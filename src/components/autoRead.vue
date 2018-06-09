@@ -7,13 +7,15 @@
 
               阅读时间 {{ autoTime }}
               <br>
-              <mt-range
-              v-model="autoTime"
-              :min="10"
-              :max="60"
-              :step="5"
-              :bar-height="5">
-              </mt-range>
+                <mt-range
+                v-model="autoTime"
+                :min="10"
+                :max="60"
+                :step="5"
+                :bar-height="5">
+                <div slot="start">最快 </div>
+                <div slot="end"> 最慢</div>
+                </mt-range>
               <br>
             </div>
       </div>
@@ -65,4 +67,7 @@ export default {
 </script>
 
 <style scoped>
+.center{
+
+}
 </style>
