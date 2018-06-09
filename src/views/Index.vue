@@ -238,7 +238,11 @@ export default {
     },
     reFlash(){
       this.reLoad = false
-      location.reload();
+      // console.log('reload before')
+      setTimeout(() => {
+        // console.log('reload')
+        location.reload();
+      }, 30);
     }
 
   },
