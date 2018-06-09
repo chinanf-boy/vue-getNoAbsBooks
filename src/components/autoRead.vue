@@ -51,7 +51,7 @@ export default {
       once && document.getElementById("up-top").click()
 
       const options = {
-          container: 'html',
+          container: 'body',
           easing: 'linear',
           offset: -60,
           cancelable: true,
