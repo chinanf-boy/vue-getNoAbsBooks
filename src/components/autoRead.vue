@@ -3,12 +3,12 @@
       <div v-if="HTML">
         <mt-switch v-model="auto">自动阅读</mt-switch>
             <div v-if="auto">
-              <button @click="startAuto(false)">GO</button>
+              <button class="read_go"  @click="startAuto(false)">GO</button>
 
-              阅读时间 {{ autoTime }}
+              阅读时间 {{ time }}
               <br>
                 <mt-range
-                v-model="autoTime"
+                v-model="time"
                 :min="10"
                 :max="60"
                 :step="5"
@@ -28,13 +28,10 @@ import localforage from "localforage";
 
 export default {
   name: "IndexAutoRead",
-  props: {
-    startAuto: Function
-  },
   data: function() {
     return {
       auto: false,
-      autoTime: 10
+      time: 10
     }
   },
   mounted(){
@@ -47,19 +44,45 @@ export default {
       localforage.setItem("user-autoTime", val);
     },
     async getAutoTime() {
-      this.autoTime = (await localforage.getItem("user-autoTime")) || this.autoTime
+      this.time = (await localforage.getItem("user-autoTime")) || this.time
+    },
+    startAuto(once = true){
+      // start auto read
+      once && document.getElementById("up-top").click()
+
+      const options = {
+          container: 'html',
+          easing: 'linear',
+          offset: -60,
+          cancelable: true,
+          onDone: this.autoDone,
+          x: false,
+          y: true
+      }
+
+      this.autoCancel = this.$scrollTo("#bottom",this.speedMs,options)
+    },
+    autoDone(e){
+      // go next page
+      setTimeout(()=>{
+         document.getElementById('pb_next') && document.getElementById('pb_next').click()
+      },2000)
     },
   },
   computed: {
     ...mapState({
-      HTML: state => state.HTML
-    })
+      HTML: state => state.HTML,
+      autoTime: state => state.autoTime
+    }),
+      speedMs: function() {
+      return +this.autoTime * 1000;
+    },
   },
   watch: {
     auto: function(n) {
       this.setAutoRead(n);
     },
-    autoTime: function(n) {
+    time: function(n) {
       this.setAutoTime(n);
     }
   }

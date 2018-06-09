@@ -25,14 +25,14 @@
 					let RmHrefIndex = source.lastIndexOf('/');
 					source = source.substring(RmHrefIndex);
 				}
-        console.log('pages add',href,source)
+        // console.log('pages add',href,source)
         if(source.startsWith('http')){
           event.href = window.location.origin + '/#/' + source;
         }else{
           event.href= href + source
         }
 
-				console.log('pages',event);
+				// console.log('pages',event);
 				
       };
       var SelectJs = function(event){

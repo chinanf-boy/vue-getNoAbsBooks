@@ -4,7 +4,7 @@
     <font-size></font-size>
       
     <!-- auto read -->
-    <auto-reader :startAuto="startAuto"></auto-reader>
+    <auto-reader></auto-reader>
       
       <div class="book" id="book-top">
         <div class="cover_BOOK" ref="getHtml" >
@@ -92,14 +92,14 @@ export default {
       isLoading: state => state.isIndexLoading,
       messageForUser: state => state.messageForUser,
       title: state => state.title,
-      autoRead: state => state.autoRead,
-      autoTime: state => state.autoTime
+      autoRead: state => state.autoRead
     }),
-    speedMs: function() {
-      return +this.autoTime * 1000;
-    },
+
     urlPath: function() {
-      return this.path.slice(this.apiSelected.length + 1);
+      if (this.path.includes(this.apiSelected)) {
+        return this.path.slice(this.apiSelected.length + 1);
+      }
+      return this.path;
     }
   },
   mounted() {
@@ -165,10 +165,9 @@ export default {
                   this.setTitle(bname.textContent)
                 }
                 
-                if(this.autoRead && this.autoCancel){
-                  // console.log('time')
-                  this.autoCancel()
-                  this.startAuto()
+                if(this.autoRead){
+                  // console.log('time',document.querySelector('.read_go'))
+                  document.querySelector('.read_go').click()
 
                 }else{
                   // console.log('false',this.auto,this.autoCancel)
@@ -214,28 +213,6 @@ export default {
         trailing: true
       }
     ),
-    startAuto(once = true){
-      // start auto read
-      once && document.getElementById("up-top").click()
-
-      const options = {
-          container: 'body',
-          easing: 'linear',
-          offset: -60,
-          cancelable: true,
-          onDone: this.autoDone,
-          x: false,
-          y: true
-      }
-
-      this.autoCancel = this.$scrollTo("#bottom",this.speedMs,options)
-    },
-    autoDone(e){
-      // go next page
-      setTimeout(()=>{
-         document.getElementById('pb_next') && document.getElementById('pb_next').click()
-      },this.speedMs / 7)
-    },
     reFlash(){
       this.reLoad = false
       // console.log('reload before')
