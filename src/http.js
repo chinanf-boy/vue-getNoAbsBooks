@@ -1,9 +1,9 @@
-const axios = require("axios");
+import axios from "axios";
 // import api from './api'
 // import store from "./store";
 // import router from "./router";
 
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 8000;
 
 if (!process.env.BOOK_DEV) {
   axios.defaults.baseURL = "https://getnoabsbooks.herokuapp.com";
