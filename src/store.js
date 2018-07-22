@@ -305,6 +305,9 @@ export default new Vuex.Store({
       // console.log("action copyHTML off");
       return H;
     },
+    removeHTML:async function({state}){
+      await localforage.removeItem(`${state.fullURL}`)
+    },
     getBookIndex: async function({ commit, state, dispatch }, path) {
       commit("setIndexLoading", true);
 

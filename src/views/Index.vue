@@ -6,17 +6,23 @@
     <!-- auto read -->
     <auto-reader></auto-reader>
       
-      <div class="book" id="book-top">
-        <div class="cover_BOOK" ref="getHtml" >
-
-          <div v-html="HTML">
-          </div>
-          
-          <div v-if="HTML" class="up-top" id="bottom">       
-              <a href="#container" id="up-top" style="color:#038ef7;display:block;">Up top</a>
-          </div>
+    <div class="book" id="book-top">
+      <div class="cover_BOOK" ref="getHtml" >
+        <!-- book HTML body-->
+        <div v-html="HTML">
         </div>
+        <!-- Up top -->
+        <div v-if="HTML" class="up-top" id="bottom">       
+            <a href="#container" id="up-top" style="color:#038ef7;display:block;">Up top</a>
+        </div>
+        <!-- remove cache and reFlash -->
+            <div v-if="HTML" >       
+                  <button v-if="reLoad" @click="hardReFlash">重刷新</button>
+                  <mt-spinner v-else type="triple-bounce" :size="60" color="#26a2ff">
+                    </mt-spinner>
+            </div>
       </div>
+    </div>
     
   <!-- require info -->
    <div v-if="isLoading">
@@ -128,7 +134,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading", "setTitle"]),
-    ...mapActions(["showErrMessage", "getBookIndex"]),
+    ...mapActions(["showErrMessage", "getBookIndex","removeHTML"]),
     getPath() {
       // console.log("Index methods getPath on");
       this.path = this.$route.path;
@@ -220,6 +226,10 @@ export default {
         // console.log('reload')
         location.reload();
       }, 30);
+    },
+    hardReFlash(){
+      this.removeHTML()
+      this.reFlash()
     }
 
   },
