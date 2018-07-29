@@ -4,9 +4,10 @@ import axios from "axios";
 // import router from "./router";
 
 axios.defaults.timeout = 8000;
-
+const SOURCE = `http://noabs-env.hm236u4uge.ap-northeast-1.elasticbeanstalk.com`
+// "https://getnoabsbooks.herokuapp.com"
 if (!process.env.BOOK_DEV) {
-  axios.defaults.baseURL = "https://getnoabsbooks.herokuapp.com";
+  axios.defaults.baseURL = SOURCE;
 } else {
   axios.defaults.baseURL = "http://192.168.11.103:5000";
 }
