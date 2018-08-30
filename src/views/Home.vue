@@ -29,12 +29,10 @@
     <li v-if="hideDelBook(book.name)"  class="book-list" v-for="book in books" :key="book.name">
       <!-- <span style="background-color:#c9e4c6;width:100%"  v-if="book.origin">  -->
 
-        <router-link :to="{ path: book.url } " tag="span" class="book_link" > 
+        <router-link :to="{ path: book.url }" class="book_link" > 
           <button  class="home_book" type="submit" @click="setA(book.origin)">
-            <a class="book_click"> 
             {{decodeURI(book.name)}}  
               {{ book.origin}} 
-            </a>
           </button>
         </router-link>
         <!-- <span v-if="decodeURI(book.name)">   书名:   }</span> -->
