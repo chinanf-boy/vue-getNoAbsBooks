@@ -293,6 +293,24 @@ export default new Vuex.Store({
       return result;
     },
     // Index
+    addBookTag:async function({dispatch}, url) {
+      // console.log("adding jsonstore", url);
+      try{
+
+        Indicator.open("正在添加书签")
+        let res =  await axios.post("/api/addBookTag", { url })
+        Indicator.open("添加成功")
+        return res
+
+      }catch(e){
+        // console.log('addJsonStore error')
+        dispatch("showErrMessage", "无法被加入书单\n"+e);
+        throw new Error(e);  
+      }finally{
+        Indicator.close()
+      }
+
+    },
     keepHTML: async function({ commit, state }, html) {
       // console.log("action keepHTML on", state.fullURL);
       await localforage.setItem(`${state.fullURL}`, html);

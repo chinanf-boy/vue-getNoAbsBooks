@@ -5,6 +5,8 @@
         <div v-if="setting">
 
         <font-size></font-size>
+        <book-tag></book-tag>
+
         
               <button class="read_go" style="padding:0.1rem;border-radius: 20%;"><mt-switch v-model="auto">自动阅读</mt-switch></button>
 
@@ -29,11 +31,14 @@
 import { mapState, mapMutations } from "vuex";
 import localforage from "localforage";
 import fontSize from "@/components/fontSize.vue";
+import bookTag from "@/components/bookTag.vue";
+
 
 export default {
   name: "IndexAutoRead",
   components: {
-    fontSize
+    fontSize,
+    bookTag
   },
   data: function() {
     return {
