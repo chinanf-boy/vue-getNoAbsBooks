@@ -12,7 +12,7 @@
         </div>
         <!-- Up top -->
         <div v-if="HTML" class="up-top" id="bottom">       
-            <a href="#container" id="up-top" style="color:#038ef7;display:block;">Up top</a>
+            <a @click="scrollTop(1)" id="up-top" style="color:#038ef7;display:block;">Up top</a>
         </div>
         <!-- remove cache and reFlash -->
             <div v-if="HTML" >       
@@ -139,6 +139,9 @@ export default {
       // console.log("Index methods getPath on");
       this.path = this.$route.path;
       // console.log("Index methods getPath off");
+    },
+    scrollTop(ms){
+      this.$scrollTo("#container",ms)
     },
     addLoad(ing) {
       // console.log("Index methods addLoad on");
