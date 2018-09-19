@@ -4,7 +4,7 @@ import axios from "axios";
 // import router from "./router";
 
 axios.defaults.timeout = 8000;
-const SOURCE = "https://getnoabsbooks.herokuapp.com"
+const SOURCE = "https://getnoabsbook.herokuapp.com"
 
 if (!process.env.BOOK_DEV) {
   axios.defaults.baseURL = SOURCE;

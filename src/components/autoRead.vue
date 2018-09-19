@@ -1,9 +1,12 @@
 <template>
     <div>
       <div v-if="HTML">
-        <mt-switch v-model="auto">自动阅读</mt-switch>
-            <div v-if="auto">
-              <button class="read_go"  @click="startAuto(false)">GO</button>
+        <mt-switch v-model="setting">设置</mt-switch>
+        <div v-if="setting">
+
+        <font-size></font-size>
+        
+              <button class="read_go" style="padding:0.1rem;border-radius: 20%;"><mt-switch v-model="auto">自动阅读</mt-switch></button>
 
               阅读时间 {{ time }}
               <br>
@@ -25,17 +28,35 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import localforage from "localforage";
+import fontSize from "@/components/fontSize.vue";
 
 export default {
   name: "IndexAutoRead",
+  components: {
+    fontSize
+  },
   data: function() {
     return {
       auto: false,
-      time: 10
+      time: 10,
+      setting: false
     }
   },
   mounted(){
     this.getAutoTime()
+  },
+  created() {
+  /* eslint-disable */
+    this.$router.afterEach((to, from) => {
+      this.setting = false
+      if(to.path.includes('http')){
+        if(this.autoRead){
+          window._startAutoRead = this.startAuto.bind(this);
+        }else{
+          delete window._startAutoRead
+        }
+      }
+    });
   },
   methods: {
     ...mapMutations(["setAutoRead","setAutoTimer"]),
@@ -46,21 +67,21 @@ export default {
     async getAutoTime() {
       this.time = (await localforage.getItem("user-autoTime")) || this.time
     },
-    startAuto(once = true){
+    startAuto(once = true,auto){
       // start auto read
-      once && document.getElementById("up-top").click()
+      let top = document.getElementById("up-top")
+      top && once && top.click()
 
       const options = {
           container: 'body',
           easing: 'linear',
-          offset: -60,
+          offset: -100,
           cancelable: true,
           onDone: this.autoDone,
           x: false,
           y: true
       }
-
-      this.autoCancel = this.$scrollTo("#bottom",this.speedMs,options)
+      this.autoCancel = auto ? this.$scrollTo("#bottom",this.speedMs,options) : this.autoCancel()
     },
     autoDone(e){
       // go next page
@@ -72,7 +93,8 @@ export default {
   computed: {
     ...mapState({
       HTML: state => state.HTML,
-      autoTime: state => state.autoTime
+      autoTime: state => state.autoTime,
+      autoRead: state => state.autoRead
     }),
       speedMs: function() {
       return +this.autoTime * 1000;
@@ -81,6 +103,7 @@ export default {
   watch: {
     auto: function(n) {
       this.setAutoRead(n);
+      this.startAuto(false,n)
     },
     time: function(n) {
       this.setAutoTime(n);

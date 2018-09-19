@@ -1,7 +1,6 @@
 <template>
   <div class="container" id="container">
     <!-- fontsize -->
-    <font-size></font-size>
       
     <!-- auto read -->
     <auto-reader></auto-reader>
@@ -173,7 +172,7 @@ export default {
                 
                 if(this.autoRead){
                   // console.log('time',document.querySelector('.read_go'))
-                  document.querySelector('.read_go').click()
+                  window._startAutoRead && window._startAutoRead(true,true)
 
                 }else{
                   // console.log('false',this.auto,this.autoCancel)

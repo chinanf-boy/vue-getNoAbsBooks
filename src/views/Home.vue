@@ -22,7 +22,7 @@
     <br>
     <br>
     <div class="books_span" v-if="books.length">
-      Books
+      书单
     </div>
     <!-- b         oo         k      s -->
     <ul v-if="!del">
