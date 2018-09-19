@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button type="submit" @click="addBookTag(fullURL)">添加书签</button>
+        <button type="submit" @click="addActBookTags({url:fullURL,title})">添加书签</button>
     </div>
 </template>
 
@@ -11,10 +11,10 @@ import { mapActions,mapState } from "vuex";
 export default {
   name: "IndexBookTag",
   computed:{
-    ...mapState(["fullURL"])
+    ...mapState(["fullURL", "title"])
   },
   methods:{
-    ...mapActions(["addBookTag"])
+    ...mapActions(["addActBookTags"])
   }
 };
 </script>

@@ -80,6 +80,7 @@ export default {
   data: function() {
     return {
       path: "",
+      bookName: "",
       reLoad: true
     };
   },
@@ -166,6 +167,7 @@ export default {
 
                 if(bname && bchapter){
                   this.setTitle(bname.textContent +' > '+bchapter.textContent)
+                  
                 }else if(bname){
                   this.setTitle(bname.textContent)
                 }

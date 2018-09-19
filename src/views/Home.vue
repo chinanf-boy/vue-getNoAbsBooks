@@ -20,7 +20,21 @@
     <br>
     <button type="submit" @click="textInput">👉 书籍ID确定</button>
     <br>
+    
+    <div class="books_span" v-if="bookTags.length">
+      书签
+        <ul style="margin:0;">
+          <li class="book-list" v-for="tag in bookTags" :key="tag.id">
+            <router-link :to="{path:tag.url}" class="book_link">
+              <button type="submit" style="background-color:#c15a5a;overflow: hidden;">{{tag.title}}</button>
+            </router-link>
+            <br />
+            <br />
+          </li>
+        </ul>
+    </div>
     <br>
+
     <div class="books_span" v-if="books.length">
       书单
     </div>
@@ -132,6 +146,7 @@ export default {
     ...mapState({
       // 1
       books: state => state.books,
+      bookTags: state => state.bookTags,
       isLoading: state => state.isHomeLoading,
       API: state => state.Api,
       messageForUser: state => state.messageForUser,

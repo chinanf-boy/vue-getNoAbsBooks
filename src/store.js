@@ -5,8 +5,16 @@ import URI from "urijs";
 require("@/util");
 Vue.use(Vuex);
 
-import { Indicator } from 'mint-ui';
+import { Indicator,Toast } from 'mint-ui';
 import localforage from "localforage";
+
+let Toast4 = function Toast4(str){
+  Toast({
+    message: str,
+    iconClass: 'icon icon-success',
+    duration: 400
+  });
+}
 
 export default new Vuex.Store({
   state: {
@@ -16,6 +24,7 @@ export default new Vuex.Store({
     pendingLoad: "",
     // Home
     books: [],
+    bookTags: [],
     Api: ["http://m.zwdu.com", "http://m.76wx.com"],
     apiSelected: "",
     suffix: "html",
@@ -36,6 +45,9 @@ export default new Vuex.Store({
     // App
     clearBooks(state) {
       state.books = [];
+    },
+    clearBookTags(state){
+      state.bookTags = [];
     },
     setBlockLoading(state, bool) {
       state.isBlockLoading = bool;
@@ -65,6 +77,11 @@ export default new Vuex.Store({
     addBooks(state, data) {
       Object.keys(data).forEach(bookName => {
         state.books.push(data[bookName]);
+      });
+    },
+    addBookTags(state, data) {
+      Object.keys(data).forEach(tag => {
+        state.bookTags.push(data[tag]);
       });
     },
     changeApi(state, data) {
@@ -256,8 +273,7 @@ export default new Vuex.Store({
             res = await axios.post("/api/deleteJsonStore", { name, pwd })
           };
         }
-
-        Indicator.open(`删除-完成✅`)
+        Toast4("删除 成功")
         return res
         // console.log('delJsonStore end')        
       }catch(err){
@@ -276,11 +292,14 @@ export default new Vuex.Store({
       commit("setHomeLoading", true);
 
       commit("clearBooks");
+      commit("clearBookTags");
+
 
       let result;
       try {
         result = await axios.get("/api/getAllBooks").then(res => {
-          commit("addBooks", res.data.result);
+          commit("addBooks", res.data.result.books || []);
+          commit("addBookTags", res.data.result.booktags || []);
         });
       } catch (e) {
         dispatch("showErrMessage", e.message);
@@ -293,18 +312,18 @@ export default new Vuex.Store({
       return result;
     },
     // Index
-    addBookTag:async function({dispatch}, url) {
+    addActBookTags:async function({dispatch}, {url, title}) {
       // console.log("adding jsonstore", url);
       try{
 
-        Indicator.open("正在添加书签")
-        let res =  await axios.post("/api/addBookTag", { url })
-        Indicator.open("添加成功")
+        Indicator.open(`正在添加书签${title}`)
+        let res =  await axios.post("/api/addBookTags", { url,title })
+        Toast4("添加 成功")
         return res
 
       }catch(e){
         // console.log('addJsonStore error')
-        dispatch("showErrMessage", "无法被加入书单\n"+e);
+        dispatch("showErrMessage", "无法被加入书签\n"+e);
         throw new Error(e);  
       }finally{
         Indicator.close()
