@@ -111,7 +111,7 @@ export default {
   mounted() {
     // console.log("Index mounted on");
     this.getPath();
-
+    this.initFontSize()
     // console.log("Index mounted off");
   },
   created() {
@@ -134,7 +134,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading", "setTitle"]),
-    ...mapActions(["showErrMessage", "getBookIndex","removeHTML"]),
+    ...mapActions(["showErrMessage", "getBookIndex","removeHTML","initFontSize"]),
     getPath() {
       // console.log("Index methods getPath on");
       this.path = this.$route.path;

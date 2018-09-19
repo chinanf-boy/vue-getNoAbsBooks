@@ -46,9 +46,7 @@ export default {
     },
     
     async getFontSize() {
-      this.fontSize =
-        (await localforage.getItem('user-fontsize')) ||
-        +window.getComputedStyle(document.body)['font-size'].replace('px', '');
+      this.fontSize = await localforage.getItem('user-fontsize')
     }
   },
   watch: {

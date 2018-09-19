@@ -330,6 +330,17 @@ export default new Vuex.Store({
       }
 
     },
+    initFontSize: async function({ commit, state }) {
+      // console.log("action keepHTML on", state.fullURL);
+      let fontSize =
+      (await localforage.getItem('user-fontsize')) ||
+      +window.getComputedStyle(document.body)['font-size'].replace('px', '');
+      
+      document.querySelector('body').style.fontSize = fontSize + 'px';
+
+      await localforage.setItem('user-fontsize', fontSize);
+      // console.log("action keepHTML off");
+    },
     keepHTML: async function({ commit, state }, html) {
       // console.log("action keepHTML on", state.fullURL);
       await localforage.setItem(`${state.fullURL}`, html);
