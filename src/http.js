@@ -4,7 +4,7 @@ import axios from "axios";
 // import router from "./router";
 
 axios.defaults.timeout = 8000;
-let sW = 0
+let sW = 1
 
 const SOURCE = "https://getnoabsbook.herokuapp.com"
 
