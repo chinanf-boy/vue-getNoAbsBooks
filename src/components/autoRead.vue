@@ -80,7 +80,7 @@ export default {
       const options = {
           container: 'body',
           easing: 'linear',
-          offset: -100,
+          offset: -60,
           cancelable: true,
           onDone: this.autoDone,
           x: false,
