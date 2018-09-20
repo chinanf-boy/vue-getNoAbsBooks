@@ -15,7 +15,7 @@
                 <mt-range
                 v-model="time"
                 :min="10"
-                :max="60"
+                :max="100"
                 :step="5"
                 :bar-height="5">
                 <div slot="start">最快 </div>
