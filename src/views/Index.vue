@@ -121,8 +121,11 @@ export default {
     /* eslint-disable */
     this.$router.afterEach((to, from) => {
       // console.log("run router", to.path);
+      
       this.setIndexLoading(true); // we must show the user, app running quickly
+      this.setHtml("")
       this.setBlockLoading(false);
+
       // need to get time
       // console.log("Index methods getPath 2222");
 
@@ -133,7 +136,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading", "setTitle"]),
+    ...mapMutations(["setBlockLoading", "setPendingLoad", "setIndexLoading", "setTitle", "setHtml"]),
     ...mapActions(["showErrMessage", "getBookIndex","removeHTML","initFontSize"]),
     getPath() {
       // console.log("Index methods getPath on");

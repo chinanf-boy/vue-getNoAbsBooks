@@ -434,9 +434,7 @@ export default new Vuex.Store({
 
         // console.log("getBookIndex after", result.data);
         await dispatch("keepHTML", result.data);
-        commit("setIndexLoading", false);
 
-        return result;
       } catch (e) {
         commit("setHtml", "");
 
@@ -451,7 +449,9 @@ export default new Vuex.Store({
       } finally {
         if (notUserAction) {
           commit("setIndexLoading", false);
-        }
+      }
+
+      return result;
 
         // console.log("actions getBookIndex off");
       }
