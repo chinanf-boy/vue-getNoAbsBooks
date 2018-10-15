@@ -434,6 +434,7 @@ export default new Vuex.Store({
 
         // console.log("getBookIndex after", result.data);
         await dispatch("keepHTML", result.data);
+        commit("setIndexLoading", false);
 
         return result;
       } catch (e) {
