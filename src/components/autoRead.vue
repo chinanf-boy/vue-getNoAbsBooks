@@ -72,10 +72,9 @@ export default {
     async getAutoTime() {
       this.time = (await localforage.getItem("user-autoTime")) || this.time
     },
-    startAuto(once = true,auto){
+    startAuto(auto){
       // start auto read
-      let top = document.getElementById("up-top")
-      top && once && top.click()
+
 
       const options = {
           container: 'body',
@@ -108,7 +107,7 @@ export default {
   watch: {
     auto: function(n) {
       this.setAutoRead(n);
-      this.startAuto(false,n)
+      this.startAuto(n)
     },
     time: function(n) {
       this.setAutoTime(n);

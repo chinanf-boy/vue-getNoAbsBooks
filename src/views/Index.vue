@@ -121,7 +121,11 @@ export default {
     /* eslint-disable */
     this.$router.afterEach((to, from) => {
       // console.log("run router", to.path);
-      
+      if(this.autoRead){
+        // console.log('up Click',this.autoRead,document.getElementById("up-top"))
+        let top = document.getElementById("up-top")
+        top && top.click()
+      }
       this.setIndexLoading(true); // we must show the user, app running quickly
       this.setHtml("")
       this.setBlockLoading(false);
@@ -179,11 +183,11 @@ export default {
                 }
                 
                 if(this.autoRead){
-                  // console.log('time',document.querySelector('.read_go'))
-                  window._startAutoRead && window._startAutoRead(true,true)
+                  // console.log('new page, autoRead')
+                  window._startAutoRead && window._startAutoRead(this.autoRead)
 
                 }else{
-                  // console.log('false',this.auto,this.autoCancel)
+                  // console.log('new page, stop')
                   
                 }
 
