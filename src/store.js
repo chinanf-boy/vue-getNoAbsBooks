@@ -286,6 +286,35 @@ export default new Vuex.Store({
       }
 
     },
+    delBookTag: async function({dispatch},delBooks) {
+      try{
+        // console.log('delBookTag start',delBooks)
+        Indicator.open("正在删除")
+        
+        let delBookList  = delBooks.delBookList
+        let res
+        if(delBookList.length){
+          for(let bname of delBookList){
+            let name = encodeURI(bname);
+            Indicator.open(`正在删除-${bname}`)
+            res = await axios.post("/api/delBookTag", { title:name })
+          };
+        }
+        
+        Toast4("删除 成功")
+
+        return res
+        // console.log('delBookTag end')        
+      }catch(err){
+        dispatch("showErrMessage", "无法删除书签\n"+err.message);
+        // throw new Error(err);  
+      }finally{
+        setTimeout(() => {
+          Indicator.close()
+        }, 300);
+      }
+
+    },
     getAllBooks: async function({ commit, dispatch }) {
       // console.log("actions getAllBooks on");
 

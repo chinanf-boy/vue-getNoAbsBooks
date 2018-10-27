@@ -88,18 +88,18 @@
 
 <script>
 // @ is an alias to /src
-import { mapActions, mapState, mapGetters } from "vuex";
-import HelloWorld from "@/components/HelloWorld.vue";
-import URI from "urijs";
+import {mapActions, mapState, mapGetters} from 'vuex';
+import HelloWorld from '@/components/HelloWorld.vue';
+import URI from 'urijs';
 
 export default {
-  name: "home",
+  name: 'home',
   data() {
     return {
-      Input: "2222/",
-      apiSelected: "",
-      pathName: "",
-      pwd: "",
+      Input: '2222/',
+      apiSelected: '',
+      pathName: '',
+      pwd: '',
       del: false,
       delBookList: [],
       delOK: false
@@ -113,7 +113,7 @@ export default {
   created() {
     // 2
     // console.log("home created on",this.$route.path);
-    this.$store.commit("setPendingLoad", this.$route.path);
+    this.$store.commit('setPendingLoad', this.$route.path);
     this.apiSelected = this.$store.state.apiSelected || this.API[0];
 
     // console.log("home created off");
@@ -123,7 +123,7 @@ export default {
       get: function() {
         let U = new URI(this.apiSelected);
 
-        if (this.pathName != "") {
+        if (this.pathName != '') {
           U.pathname(this.pathName);
         }
 
@@ -135,8 +135,8 @@ export default {
         let U = new URI(N);
         this.apiSelected = U.origin();
 
-        if (U.pathname() == "/") {
-          this.pathName = "";
+        if (U.pathname() == '/') {
+          this.pathName = '';
         } else {
           this.pathName = U.pathname();
         }
@@ -165,8 +165,14 @@ export default {
     // console.log("Home mounted off");
   },
   methods: {
-    ...mapActions(["showErrMessage", "syncApi", "getAllBooks", "delJsonStore"]),
-    ...mapGetters(["getBookNameList"]),
+    ...mapActions([
+      'showErrMessage',
+      'syncApi',
+      'getAllBooks',
+      'delJsonStore',
+      'delBookTag'
+    ]),
+    ...mapGetters(['getBookNameList']),
     hideDelBook(name) {
       if (this.delOK) {
         let Del = this.delBookList.some(b => {
@@ -190,21 +196,21 @@ export default {
     },
     textInput() {
       if (!this.Input) {
-        this.showErrMessage("请输入正确 书籍");
+        this.showErrMessage('请输入正确 书籍');
         return;
       }
 
       let fullUrl = this.fullURL;
-      this.$store.commit("setFullURL", this.fullURL);
+      this.$store.commit('setFullURL', this.fullURL);
 
       this.addJsonStore(fullUrl).then(() => {
         let uRI = new URI(fullUrl);
 
         if (uRI.suffix()) {
-          this.$store.commit("changeSuffix", uRI.suffix());
+          this.$store.commit('changeSuffix', uRI.suffix());
         }
         // console.log("method textInput route to ", uRI.pathname());
-        this.$router.push({ path: `${uRI.href()}` });
+        this.$router.push({path: `${uRI.href()}`});
       });
     },
     getFull(Input) {
@@ -215,14 +221,14 @@ export default {
       return fullUrl;
     },
     addJsonStore(url) {
-      return this.$store.dispatch("addJsonStore", url);
+      return this.$store.dispatch('addJsonStore', url);
     },
     changeS() {
       let U = new URI(this.API);
       if (U.origin()) {
-        this.$store.commit("changeApi", U.origin());
+        this.$store.commit('changeApi', U.origin());
       } else {
-        this.showErrMessage("确定 源是 url");
+        this.showErrMessage('确定 源是 url');
       }
     },
     changeInput(In) {
@@ -240,17 +246,20 @@ export default {
     delBooks() {
       let pwd = this.pwd;
       let delBookList = this.delBookList;
-      this.delJsonStore({ pwd, delBookList }).then(ok => {
+      this.delJsonStore({pwd, delBookList}).then(ok => {
         if (ok) {
-          this.delOK = true;
-          this.del = false;
+          this.delBookTag({delBookList}).then(ok => {
+            if (ok) {
+              this.getBooks();
+            }
+          });
         }
       });
     }
   },
   watch: {
     apiSelected: function(N) {
-      this.$store.commit("setApiSelected", N);
+      this.$store.commit('setApiSelected', N);
     },
     Input: function(N) {
       // console.log("watch Input");
