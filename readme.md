@@ -12,8 +12,8 @@
 
 ### 1. 书籍确定
 
-<img src="./imgs/enter-book.png" width="40%" height="300px">
-<img src="./imgs/enter-book.gif" width="40%" height="400px">
+![BOOK](./imgs/enter-book.png)
+![BOOK_GIF](./imgs/enter-book.gif)
 
 
 进入看看
@@ -32,7 +32,7 @@
 
 ### 2. 解码页面
 
-<img src="./imgs/index-look.gif" width="50%" height="400px">
+![index_GIF](./imgs/index-look.gif)
 
 你可以在 http://llever.com/getNoAbsBooks/#/ 后面 复制/粘贴 你想看到的书网页
 
